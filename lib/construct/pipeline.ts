@@ -43,6 +43,7 @@ export class Pipeline extends Construct {
           'npm run build',
           'npx cdk synth',
         ],
+        primaryOutputDirectory: 'cdk.out',
       }),
     });
   }

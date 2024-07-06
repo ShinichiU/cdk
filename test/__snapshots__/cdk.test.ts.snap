@@ -391,7 +391,7 @@ exports[`Matches the snapshot stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"1cc7bc875bcfca93fd092681b02f6c1613a6083f3e46f216c9362cd8092dc401"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"a296e59394e8b5816a51ea40b7b9498747d824fbb512eb0171823de856f84cb0"}]",
                   "ProjectName": {
                     "Ref": "CdkPipelinecdkpipelinepipelineBuildSynthCdkBuildProject9D1F542C",
                   },
@@ -614,8 +614,8 @@ exports[`Matches the snapshot stack 1`] = `
     "build": {
       "commands": [
         "npm ci",
-        "npx prettier --check './{bin,lib,src,tests}/**/*.{ts,tsx}'",
-        "npx eslint './{bin,lib,src,tests}/**/*.{ts,tsx}' --max-warnings=0",
+        "npx prettier --check './{bin,lib,src,test}/**/*.{ts,tsx}'",
+        "npx eslint './{bin,lib,src,test}/**/*.{ts,tsx}' --max-warnings=0",
         "npm run test",
         "npm run build",
         "npx cdk synth"

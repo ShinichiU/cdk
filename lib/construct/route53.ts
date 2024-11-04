@@ -127,6 +127,7 @@ export class Route53 extends Construct {
       // dev.nuts-choco.com の NS レコードを設定
       new NsRecord(this, 'dev-ns-records', {
         zone: this.hostedZone,
+        recordName: 'dev',
         values: [
           'ns-897.awsdns-48.net',
           'ns-303.awsdns-37.com',

@@ -316,7 +316,7 @@ exports[`Matches the snapshot appStack 1`] = `
         "HostedZoneId": {
           "Ref": "Route53hostedzone82773177",
         },
-        "Name": "nuts-choco.com.",
+        "Name": "dev.nuts-choco.com.",
         "ResourceRecords": [
           "ns-897.awsdns-48.net",
           "ns-303.awsdns-37.com",

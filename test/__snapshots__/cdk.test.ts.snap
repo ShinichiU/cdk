@@ -454,6 +454,93 @@ exports[`Matches the snapshot stack 1`] = `
             "Actions": [
               {
                 "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ActionMode": "CHANGE_SET_REPLACE",
+                  "Capabilities": "CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND",
+                  "ChangeSetName": "PipelineChange",
+                  "RoleArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":iam::533570606590:role/cdk-hnb659fds-cfn-exec-role-533570606590-",
+                        {
+                          "Ref": "AWS::Region",
+                        },
+                      ],
+                    ],
+                  },
+                  "StackName": "dev-AppStack",
+                  "TemplatePath": "Synth_Output::assembly-RootStack-CdkPipeline-dev/RootStackCdkPipelinedevAppStack37451EDC.template.json",
+                },
+                "InputArtifacts": [
+                  {
+                    "Name": "Synth_Output",
+                  },
+                ],
+                "Name": "Prepare",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::533570606590:role/cdk-hnb659fds-deploy-role-533570606590-",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                    ],
+                  ],
+                },
+                "RunOrder": 1,
+              },
+              {
+                "ActionTypeId": {
+                  "Category": "Deploy",
+                  "Owner": "AWS",
+                  "Provider": "CloudFormation",
+                  "Version": "1",
+                },
+                "Configuration": {
+                  "ActionMode": "CHANGE_SET_EXECUTE",
+                  "ChangeSetName": "PipelineChange",
+                  "StackName": "dev-AppStack",
+                },
+                "Name": "Deploy",
+                "RoleArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::533570606590:role/cdk-hnb659fds-deploy-role-533570606590-",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                    ],
+                  ],
+                },
+                "RunOrder": 2,
+              },
+            ],
+            "Name": "dev",
+          },
+          {
+            "Actions": [
+              {
+                "ActionTypeId": {
                   "Category": "Approval",
                   "Owner": "AWS",
                   "Provider": "Manual",
@@ -624,6 +711,31 @@ exports[`Matches the snapshot stack 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
+                      ":iam::533570606590:role/cdk-hnb659fds-deploy-role-533570606590-",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "kms:Decrypt",
+                "kms:DescribeKey",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
                       ":iam::992382384155:role/cdk-hnb659fds-deploy-role-992382384155-",
                       {
                         "Ref": "AWS::Region",
@@ -672,6 +784,53 @@ exports[`Matches the snapshot stack 1`] = `
               "Effect": "Deny",
               "Principal": {
                 "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "CdkPipelinecdkpipelinepipelineArtifactsBucketDB57F132",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "CdkPipelinecdkpipelinepipelineArtifactsBucketDB57F132",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::533570606590:role/cdk-hnb659fds-deploy-role-533570606590-",
+                      {
+                        "Ref": "AWS::Region",
+                      },
+                    ],
+                  ],
+                },
               },
               "Resource": [
                 {
@@ -1058,6 +1217,25 @@ exports[`Matches the snapshot stack 1`] = `
                 "Fn::GetAtt": [
                   "CdkPipelinecdkpipelineCodeBuildActionRole19AB58C7",
                   "Arn",
+                ],
+              },
+            },
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition",
+                    },
+                    ":iam::533570606590:role/cdk-hnb659fds-deploy-role-533570606590-",
+                    {
+                      "Ref": "AWS::Region",
+                    },
+                  ],
                 ],
               },
             },

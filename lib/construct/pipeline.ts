@@ -43,6 +43,15 @@ export class Pipeline extends Construct {
         commands: ['npm ci', 'npm run build', 'npm run cdk synth'],
       }),
     });
+    const devWave = cdkPipeline.addWave('dev');
+    const dev = new AppStage(this, 'dev', {
+      shortEnv: 'dev',
+      env: {
+        account: this.devAccountId,
+        region: process.env.CDK_DEFAULT_REGION,
+      },
+    });
+    devWave.addStage(dev);
 
     const prdWave = cdkPipeline.addWave('prd', {
       pre: [new ManualApprovalStep('Approve')],

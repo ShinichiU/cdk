@@ -46,7 +46,8 @@ exports[`Matches the snapshot appStack dev 1`] = `
     "CloudFrontdevbasicauthfunctionB2F6149C": {
       "Properties": {
         "AutoPublish": true,
-        "FunctionCode": "export const handler = (event) => {
+        "FunctionCode": "// eslint-disable-next-line
+function handler(event) {
   const request = event.request;
   const headers = request.headers;
 
@@ -58,11 +59,11 @@ exports[`Matches the snapshot appStack dev 1`] = `
     return {
       statusCode: 401,
       statusDescription: 'Unauthorized',
-      headers: { 'www-authenticate' : { value: 'Basic' }},
+      headers: { 'www-authenticate': { value: 'Basic' } },
     };
   }
 
-  return request
+  return request;
 }
 ",
         "FunctionConfig": {

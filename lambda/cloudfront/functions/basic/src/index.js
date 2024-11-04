@@ -1,4 +1,5 @@
-export const handler = (event) => {
+// eslint-disable-next-line
+function handler(event) {
   const request = event.request;
   const headers = request.headers;
 
@@ -10,9 +11,9 @@ export const handler = (event) => {
     return {
       statusCode: 401,
       statusDescription: 'Unauthorized',
-      headers: { 'www-authenticate' : { value: 'Basic' }},
+      headers: { 'www-authenticate': { value: 'Basic' } },
     };
   }
 
-  return request
+  return request;
 }

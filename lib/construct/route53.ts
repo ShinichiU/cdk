@@ -3,6 +3,7 @@ import {
   CfnDNSSEC,
   CfnKeySigningKey,
   CnameRecord,
+  DsRecord,
   HostedZone,
   IAliasRecordTarget,
   IHostedZone,
@@ -192,6 +193,14 @@ export class Route53 extends Construct {
           'ns-303.awsdns-37.com',
           'ns-1522.awsdns-62.org',
           'ns-1659.awsdns-15.co.uk',
+        ],
+      });
+      // dev.nuts-choco.com の DS レコードを設定
+      new DsRecord(this, 'dev-ds-records', {
+        zone: this.hostedZone,
+        recordName: 'dev',
+        values: [
+          '38063 13 2 9A43C3F7FAA9210106693EAB213E30E5CE8C00203EBEF2E7389B735C65796A91',
         ],
       });
     }

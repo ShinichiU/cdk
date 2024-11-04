@@ -311,28 +311,31 @@ exports[`Matches the snapshot appStack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
+    "Route53devnsrecords308B19F8": {
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "Name": "nuts-choco.com.",
+        "ResourceRecords": [
+          "ns-897.awsdns-48.net",
+          "ns-303.awsdns-37.com",
+          "ns-1522.awsdns-62.org",
+          "ns-1659.awsdns-15.co.uk",
+        ],
+        "TTL": "1800",
+        "Type": "NS",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
     "Route53dmarcrecords5AFBA8B8": {
       "Properties": {
         "HostedZoneId": {
           "Ref": "Route53hostedzone82773177",
         },
-        "Name": "nuts-choco.com.",
+        "Name": "_dmarc.nuts-choco.com.",
         "ResourceRecords": [
           ""v=DMARC1; p=reject; rua=mailto:dmarc-report@nuts-choco.com ruf=mailto:dmarc-report@nuts-choco.com"",
-        ],
-        "TTL": "1800",
-        "Type": "TXT",
-      },
-      "Type": "AWS::Route53::RecordSet",
-    },
-    "Route53googlerecords8ADBB488": {
-      "Properties": {
-        "HostedZoneId": {
-          "Ref": "Route53hostedzone82773177",
-        },
-        "Name": "nuts-choco.com.",
-        "ResourceRecords": [
-          ""v=spf1 include:_spf.google.com include:sendgrid.net ~all"",
         ],
         "TTL": "1800",
         "Type": "TXT",
@@ -370,6 +373,20 @@ exports[`Matches the snapshot appStack 1`] = `
         ],
         "TTL": "1800",
         "Type": "MX",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "Route53gwssendgridrecords0A07C360": {
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "Name": "nuts-choco.com.",
+        "ResourceRecords": [
+          ""v=spf1 include:_spf.google.com include:sendgrid.net ~all"",
+        ],
+        "TTL": "1800",
+        "Type": "TXT",
       },
       "Type": "AWS::Route53::RecordSet",
     },

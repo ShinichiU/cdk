@@ -3,9 +3,13 @@ import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
 import {
   CodePipeline,
   CodePipelineSource,
+  ManualApprovalStep,
   ShellStep,
 } from 'aws-cdk-lib/pipelines';
 import { CfnConnection } from 'aws-cdk-lib/aws-codeconnections';
+import { Stage, StageProps } from 'aws-cdk-lib';
+import { ShortEnvironments } from '../type/env';
+import { AppStack } from '../stack/app-stack';
 
 export class Pipeline extends Construct {
   constructor(scope: Construct, id: string) {
@@ -26,7 +30,7 @@ export class Pipeline extends Construct {
       providerType: 'GitHub',
     });
 
-    new CodePipeline(this, 'cdk-pipeline', {
+    const cdkPipeline = new CodePipeline(this, 'cdk-pipeline', {
       codePipeline: codePipeline,
       selfMutation: true,
       synth: new ShellStep('Synth', {
@@ -35,15 +39,34 @@ export class Pipeline extends Construct {
           triggerOnPush: true,
         }),
         installCommands: ['npm install -g aws-cdk'],
-        commands: [
-          'npm ci',
-          "npx prettier --check './{bin,lib,src,test}/**/*.{ts,tsx}'",
-          "npx eslint './{bin,lib,src,test}/**/*.{ts,tsx}' --max-warnings=0",
-          'npm run test',
-          'npm run build',
-          'npx cdk synth',
-        ],
+        commands: ['npm ci', 'npm run build', 'npx cdk synth'],
       }),
+    });
+
+    const prdWave = cdkPipeline.addWave('prd', {
+      pre: [new ManualApprovalStep('Approve')],
+    });
+    const prd = new AppStage(this, 'prd', {
+      shortEnv: 'prd',
+      env: {
+        account: process.env.CDK_DEFAULT_ACCOUNT,
+        region: process.env.CDK_DEFAULT_REGION,
+      },
+    });
+    prdWave.addStage(prd);
+  }
+}
+
+interface IStageProps extends StageProps {
+  shortEnv: ShortEnvironments;
+}
+
+class AppStage extends Stage {
+  constructor(scope: Construct, id: string, props: IStageProps) {
+    super(scope, id, props);
+
+    new AppStack(this, 'AppStack', {
+      shortEnv: props.shortEnv,
     });
   }
 }

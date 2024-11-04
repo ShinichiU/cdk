@@ -37,7 +37,7 @@ export class Route53 extends Construct {
     const keySigningKey = new CfnKeySigningKey(this, 'dnssec-ksk', {
       hostedZoneId: this.hostedZone.hostedZoneId,
       keyManagementServiceArn: key.keyArn,
-      name: 'key-nuts-choco-com',
+      name: `${props.shortEnv}KeyNutsChocoCom`,
       status: 'ACTIVE',
     });
     // associate the KSK

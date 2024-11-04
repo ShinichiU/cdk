@@ -85,15 +85,6 @@ function handler(event) {
             "Compress": true,
             "FunctionAssociations": [
               {
-                "EventType": "viewer-response",
-                "FunctionARN": {
-                  "Fn::GetAtt": [
-                    "CloudFrontdevsecurityfunctionD80B4DF2",
-                    "FunctionARN",
-                  ],
-                },
-              },
-              {
                 "EventType": "viewer-request",
                 "FunctionARN": {
                   "Fn::GetAtt": [
@@ -103,6 +94,9 @@ function handler(event) {
                 },
               },
             ],
+            "ResponseHeadersPolicyId": {
+              "Ref": "CloudFrontdevresponseheaders34CDAAD9",
+            },
             "TargetOriginId": "AppStackCloudFrontdevdistributionOrigin1FFDD44BC",
             "ViewerProtocolPolicy": "redirect-to-https",
           },
@@ -152,57 +146,41 @@ function handler(event) {
       },
       "Type": "AWS::CloudFront::OriginAccessControl",
     },
-    "CloudFrontdevsecurityfunctionD80B4DF2": {
+    "CloudFrontdevresponseheaders34CDAAD9": {
       "Properties": {
-        "AutoPublish": true,
-        "FunctionCode": "// eslint-disable-next-line
-function handler(event) {
-  const response = event.response;
-  const headers = response.headers;
-  const defaultSrc = "'self'";
-  const imgSrc =
-    "'self' https://googletagmanager.com https://*.analytics.google.com https://ssl.gstatic.com https://www.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp";
-  const scriptSrc =
-    "'self' https://googletagmanager.com https://tagmanager.google.com https://*.googletagmanager.com";
-  const styleSrc =
-    "'self' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com";
-  const fontSrc = "'self' https://fonts.gstatic.com data:";
-  const connectSrc =
-    "'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp";
-
-  // Set HTTP security headers
-  // Since JavaScript doesn't allow for hyphens in variable names, we use the dict["key"] notation
-  headers['strict-transport-security'] = {
-    value: 'max-age=63072000; includeSubdomains; preload',
-  };
-  headers['content-security-policy'] = {
-    value:
-      \`default-src \${defaultSrc};\` +
-      \` img-src \${imgSrc};\` +
-      \` script-src \${scriptSrc};\` +
-      \` style-src \${styleSrc};\` +
-      \` font-src \${fontSrc};\` +
-      \` connect-src \${connectSrc};\` +
-      " base-uri 'self';" +
-      " object-src 'none';" +
-      " require-trusted-types-for 'script';" +
-      ' trusted-types;',
-  };
-  headers['x-content-type-options'] = { value: 'nosniff' };
-  headers['x-frame-options'] = { value: 'DENY' };
-  headers['x-xss-protection'] = { value: '1; mode=block' };
-
-  // Return the response to viewers
-  return response;
-}
-",
-        "FunctionConfig": {
-          "Comment": "us-east-1AppStackCloudFroecurity-function1DEFFD67",
-          "Runtime": "cloudfront-js-2.0",
+        "ResponseHeadersPolicyConfig": {
+          "Name": "AppStackCloudFrontdevresponseheadersAFB04262",
+          "SecurityHeadersConfig": {
+            "ContentSecurityPolicy": {
+              "ContentSecurityPolicy": "default-src 'self'; img-src 'self' https://googletagmanager.com https://*.analytics.google.com https://ssl.gstatic.com https://www.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp; script-src 'self' https://googletagmanager.com https://tagmanager.google.com https://*.googletagmanager.com; style-src 'self' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp; base-uri 'self'; object-src 'none'; require-trusted-types-for 'script'; trusted-types;",
+              "Override": true,
+            },
+            "ContentTypeOptions": {
+              "Override": true,
+            },
+            "FrameOptions": {
+              "FrameOption": "SAMEORIGIN",
+              "Override": true,
+            },
+            "ReferrerPolicy": {
+              "Override": true,
+              "ReferrerPolicy": "strict-origin-when-cross-origin",
+            },
+            "StrictTransportSecurity": {
+              "AccessControlMaxAgeSec": 63072000,
+              "IncludeSubdomains": true,
+              "Override": true,
+              "Preload": true,
+            },
+            "XSSProtection": {
+              "ModeBlock": true,
+              "Override": true,
+              "Protection": true,
+            },
+          },
         },
-        "Name": "us-east-1AppStackCloudFroecurity-function1DEFFD67",
       },
-      "Type": "AWS::CloudFront::Function",
+      "Type": "AWS::CloudFront::ResponseHeadersPolicy",
     },
     "CloudFrontdevwebbucketAutoDeleteObjectsCustomResource0A087D2F": {
       "DeletionPolicy": "Delete",
@@ -685,17 +663,9 @@ exports[`Matches the snapshot appStack prd 1`] = `
           "DefaultCacheBehavior": {
             "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
             "Compress": true,
-            "FunctionAssociations": [
-              {
-                "EventType": "viewer-response",
-                "FunctionARN": {
-                  "Fn::GetAtt": [
-                    "CloudFrontprdsecurityfunction14CFA104",
-                    "FunctionARN",
-                  ],
-                },
-              },
-            ],
+            "ResponseHeadersPolicyId": {
+              "Ref": "CloudFrontprdresponseheaders6D30F904",
+            },
             "TargetOriginId": "AppStackCloudFrontprddistributionOrigin1B186F0A7",
             "ViewerProtocolPolicy": "redirect-to-https",
           },
@@ -745,57 +715,41 @@ exports[`Matches the snapshot appStack prd 1`] = `
       },
       "Type": "AWS::CloudFront::OriginAccessControl",
     },
-    "CloudFrontprdsecurityfunction14CFA104": {
+    "CloudFrontprdresponseheaders6D30F904": {
       "Properties": {
-        "AutoPublish": true,
-        "FunctionCode": "// eslint-disable-next-line
-function handler(event) {
-  const response = event.response;
-  const headers = response.headers;
-  const defaultSrc = "'self'";
-  const imgSrc =
-    "'self' https://googletagmanager.com https://*.analytics.google.com https://ssl.gstatic.com https://www.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp";
-  const scriptSrc =
-    "'self' https://googletagmanager.com https://tagmanager.google.com https://*.googletagmanager.com";
-  const styleSrc =
-    "'self' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com";
-  const fontSrc = "'self' https://fonts.gstatic.com data:";
-  const connectSrc =
-    "'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp";
-
-  // Set HTTP security headers
-  // Since JavaScript doesn't allow for hyphens in variable names, we use the dict["key"] notation
-  headers['strict-transport-security'] = {
-    value: 'max-age=63072000; includeSubdomains; preload',
-  };
-  headers['content-security-policy'] = {
-    value:
-      \`default-src \${defaultSrc};\` +
-      \` img-src \${imgSrc};\` +
-      \` script-src \${scriptSrc};\` +
-      \` style-src \${styleSrc};\` +
-      \` font-src \${fontSrc};\` +
-      \` connect-src \${connectSrc};\` +
-      " base-uri 'self';" +
-      " object-src 'none';" +
-      " require-trusted-types-for 'script';" +
-      ' trusted-types;',
-  };
-  headers['x-content-type-options'] = { value: 'nosniff' };
-  headers['x-frame-options'] = { value: 'DENY' };
-  headers['x-xss-protection'] = { value: '1; mode=block' };
-
-  // Return the response to viewers
-  return response;
-}
-",
-        "FunctionConfig": {
-          "Comment": "us-east-1AppStackCloudFroecurity-function063CDAF8",
-          "Runtime": "cloudfront-js-2.0",
+        "ResponseHeadersPolicyConfig": {
+          "Name": "AppStackCloudFrontprdresponseheaders661681E7",
+          "SecurityHeadersConfig": {
+            "ContentSecurityPolicy": {
+              "ContentSecurityPolicy": "default-src 'self'; img-src 'self' https://googletagmanager.com https://*.analytics.google.com https://ssl.gstatic.com https://www.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp; script-src 'self' https://googletagmanager.com https://tagmanager.google.com https://*.googletagmanager.com; style-src 'self' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp; base-uri 'self'; object-src 'none'; require-trusted-types-for 'script'; trusted-types;",
+              "Override": true,
+            },
+            "ContentTypeOptions": {
+              "Override": true,
+            },
+            "FrameOptions": {
+              "FrameOption": "SAMEORIGIN",
+              "Override": true,
+            },
+            "ReferrerPolicy": {
+              "Override": true,
+              "ReferrerPolicy": "strict-origin-when-cross-origin",
+            },
+            "StrictTransportSecurity": {
+              "AccessControlMaxAgeSec": 63072000,
+              "IncludeSubdomains": true,
+              "Override": true,
+              "Preload": true,
+            },
+            "XSSProtection": {
+              "ModeBlock": true,
+              "Override": true,
+              "Protection": true,
+            },
+          },
         },
-        "Name": "us-east-1AppStackCloudFroecurity-function063CDAF8",
       },
-      "Type": "AWS::CloudFront::Function",
+      "Type": "AWS::CloudFront::ResponseHeadersPolicy",
     },
     "CloudFrontprdwebbucketAutoDeleteObjectsCustomResource64555804": {
       "DeletionPolicy": "Delete",

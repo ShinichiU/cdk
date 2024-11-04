@@ -4,6 +4,7 @@ import {
   aws_cloudfront_origins,
   aws_s3,
   CfnOutput,
+  Duration,
   RemovalPolicy,
 } from 'aws-cdk-lib';
 import {
@@ -13,6 +14,9 @@ import {
   FunctionCode,
   FunctionEventType,
   FunctionRuntime,
+  HeadersFrameOption,
+  HeadersReferrerPolicy,
+  ResponseHeadersPolicy,
   ViewerProtocolPolicy,
 } from 'aws-cdk-lib/aws-cloudfront';
 import { getConfig } from '../parameters/config';
@@ -37,36 +41,84 @@ export class CloudFront extends Construct {
       enforceSSL: true,
     });
 
-    const functionAssociations: FunctionAssociation[] = [
-      {
-        eventType: FunctionEventType.VIEWER_RESPONSE,
-        function: new Function(this, `${props.shortEnv}-security-function`, {
-          runtime: FunctionRuntime.JS_2_0,
-          code: FunctionCode.fromFile({
-            filePath: path.join(
-              __dirname,
-              '../../lambda/cloudfront/functions/security/src/index.js',
-            ),
-          }),
-        }),
-      },
-    ];
+    const functionAssociations: FunctionAssociation[] | undefined =
+      props.shortEnv !== 'prd'
+        ? [
+            {
+              eventType: FunctionEventType.VIEWER_REQUEST,
+              function: new Function(
+                this,
+                `${props.shortEnv}-basic-auth-function`,
+                {
+                  runtime: FunctionRuntime.JS_2_0,
+                  code: FunctionCode.fromFile({
+                    filePath: path.join(
+                      __dirname,
+                      '../../lambda/cloudfront/functions/basic/src/index.js',
+                    ),
+                  }),
+                },
+              ),
+            },
+          ]
+        : undefined;
 
-    if (props.shortEnv !== 'prd') {
-      // prd 以外は Basic 認証を設定
-      functionAssociations.push({
-        eventType: FunctionEventType.VIEWER_REQUEST,
-        function: new Function(this, `${props.shortEnv}-basic-auth-function`, {
-          runtime: FunctionRuntime.JS_2_0,
-          code: FunctionCode.fromFile({
-            filePath: path.join(
-              __dirname,
-              '../../lambda/cloudfront/functions/basic/src/index.js',
-            ),
-          }),
-        }),
-      });
-    }
+    const defaultSrc = "'self'";
+    const imgSrc =
+      "'self' https://googletagmanager.com https://*.analytics.google.com https://ssl.gstatic.com https://www.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp";
+    const scriptSrc =
+      "'self' https://googletagmanager.com https://tagmanager.google.com https://*.googletagmanager.com";
+    const styleSrc =
+      "'self' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com";
+    const fontSrc = "'self' https://fonts.gstatic.com data:";
+    const connectSrc =
+      "'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp";
+    const responseHeadersPolicy = new ResponseHeadersPolicy(
+      this,
+      `${props.shortEnv}-response-headers`,
+      {
+        securityHeadersBehavior: {
+          contentSecurityPolicy: {
+            contentSecurityPolicy:
+              `default-src ${defaultSrc};` +
+              ` img-src ${imgSrc};` +
+              ` script-src ${scriptSrc};` +
+              ` style-src ${styleSrc};` +
+              ` font-src ${fontSrc};` +
+              ` connect-src ${connectSrc};` +
+              " base-uri 'self';" +
+              " object-src 'none';" +
+              " require-trusted-types-for 'script';" +
+              ' trusted-types;',
+            override: true,
+          },
+          referrerPolicy: {
+            referrerPolicy:
+              HeadersReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN,
+            override: true,
+          },
+          contentTypeOptions: {
+            override: true,
+          },
+          frameOptions: {
+            frameOption: HeadersFrameOption.SAMEORIGIN,
+            override: true,
+          },
+          strictTransportSecurity: {
+            // 2 years.
+            accessControlMaxAge: Duration.days(365 * 2),
+            includeSubdomains: true,
+            preload: true,
+            override: true,
+          },
+          xssProtection: {
+            protection: true,
+            modeBlock: true,
+            override: true,
+          },
+        },
+      },
+    );
 
     const domain = getConfig(props.shortEnv).domain;
     this.distribution = new Distribution(
@@ -80,6 +132,7 @@ export class CloudFront extends Construct {
           ),
           viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           functionAssociations,
+          responseHeadersPolicy,
         },
         domainNames: [domain],
         certificate: props.certificate,

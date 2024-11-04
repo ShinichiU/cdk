@@ -22,7 +22,7 @@ export class Pipeline extends Construct {
       'cdk-pipeline-pipeline',
       {
         crossAccountKeys: true,
-        pipelineType: codepipeline.PipelineType.V2, // trigger機能はV1非対応
+        pipelineType: codepipeline.PipelineType.V2,
         restartExecutionOnUpdate: false,
       },
     );

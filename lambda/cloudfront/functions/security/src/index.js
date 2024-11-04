@@ -25,7 +25,11 @@ function handler(event) {
       ` script-src ${scriptSrc};` +
       ` style-src ${styleSrc};` +
       ` font-src ${fontSrc};` +
-      ` connect-src ${connectSrc};`,
+      ` connect-src ${connectSrc};` +
+      " base-uri 'self';" +
+      " object-src 'none';" +
+      " require-trusted-types-for 'script';" +
+      ' trusted-types;',
   };
   headers['x-content-type-options'] = { value: 'nosniff' };
   headers['x-frame-options'] = { value: 'DENY' };

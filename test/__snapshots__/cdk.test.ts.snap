@@ -1,6 +1,577 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Matches the snapshot appStack 1`] = `
+exports[`Matches the snapshot appStack dev 1`] = `
+{
+  "Mappings": {
+    "AWSCloudFrontPartitionHostedZoneIdMap": {
+      "aws": {
+        "zoneId": "Z2FDTNDATAQYW2",
+      },
+      "aws-cn": {
+        "zoneId": "Z3RFFRIM2A3IF5",
+      },
+    },
+  },
+  "Outputs": {
+    "CloudFrontwebBucketName0E44B808": {
+      "Value": {
+        "Ref": "CloudFrontdevwebbucketD9BFDF8F",
+      },
+    },
+    "CloudFrontwebUrl9B9CF8D7": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Fn::GetAtt": [
+                "CloudFrontdevdistribution7BD77D6C",
+                "DomainName",
+              ],
+            },
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "CloudFrontdevbasicauthfunctionB2F6149C": {
+      "Properties": {
+        "AutoPublish": true,
+        "FunctionCode": "export const handler = (event) => {
+  const request = event.request;
+  const headers = request.headers;
+
+  if (
+    typeof headers.authorization === 'undefined' ||
+    // echo -n ura:be | base64
+    headers.authorization.value !== 'Basic dXJhOmJl'
+  ) {
+    return {
+      statusCode: 401,
+      statusDescription: 'Unauthorized',
+      headers: { 'www-authenticate' : { value: 'Basic' }},
+    };
+  }
+
+  return request
+}
+",
+        "FunctionConfig": {
+          "Comment": "us-east-1AppStackCloudFroic-auth-function7FBBADC2",
+          "Runtime": "cloudfront-js-2.0",
+        },
+        "Name": "us-east-1AppStackCloudFroic-auth-function7FBBADC2",
+      },
+      "Type": "AWS::CloudFront::Function",
+    },
+    "CloudFrontdevdistribution7BD77D6C": {
+      "Properties": {
+        "DistributionConfig": {
+          "Aliases": [
+            "dev.nuts-choco.com",
+          ],
+          "DefaultCacheBehavior": {
+            "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+            "Compress": true,
+            "FunctionAssociations": [
+              {
+                "EventType": "viewer-request",
+                "FunctionARN": {
+                  "Fn::GetAtt": [
+                    "CloudFrontdevbasicauthfunctionB2F6149C",
+                    "FunctionARN",
+                  ],
+                },
+              },
+            ],
+            "TargetOriginId": "AppStackCloudFrontdevdistributionOrigin1FFDD44BC",
+            "ViewerProtocolPolicy": "redirect-to-https",
+          },
+          "DefaultRootObject": "index.html",
+          "Enabled": true,
+          "HttpVersion": "http2",
+          "IPV6Enabled": true,
+          "Origins": [
+            {
+              "DomainName": {
+                "Fn::GetAtt": [
+                  "CloudFrontdevwebbucketD9BFDF8F",
+                  "RegionalDomainName",
+                ],
+              },
+              "Id": "AppStackCloudFrontdevdistributionOrigin1FFDD44BC",
+              "OriginAccessControlId": {
+                "Fn::GetAtt": [
+                  "CloudFrontdevdistributionOrigin1S3OriginAccessControl34431169",
+                  "Id",
+                ],
+              },
+              "S3OriginConfig": {
+                "OriginAccessIdentity": "",
+              },
+            },
+          ],
+          "ViewerCertificate": {
+            "AcmCertificateArn": {
+              "Ref": "Route53certificateAFAFED4C",
+            },
+            "MinimumProtocolVersion": "TLSv1.2_2021",
+            "SslSupportMethod": "sni-only",
+          },
+        },
+      },
+      "Type": "AWS::CloudFront::Distribution",
+    },
+    "CloudFrontdevdistributionOrigin1S3OriginAccessControl34431169": {
+      "Properties": {
+        "OriginAccessControlConfig": {
+          "Name": "AppStackCloudFrontdevdistribOrigin1S3OriginAccessControlC66EFB5F",
+          "OriginAccessControlOriginType": "s3",
+          "SigningBehavior": "always",
+          "SigningProtocol": "sigv4",
+        },
+      },
+      "Type": "AWS::CloudFront::OriginAccessControl",
+    },
+    "CloudFrontdevwebbucketAutoDeleteObjectsCustomResource0A087D2F": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "CloudFrontdevwebbucketPolicyD6F9DF3B",
+      ],
+      "Properties": {
+        "BucketName": {
+          "Ref": "CloudFrontdevwebbucketD9BFDF8F",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::S3AutoDeleteObjects",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CloudFrontdevwebbucketD9BFDF8F": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+        "VersioningConfiguration": {
+          "Status": "Enabled",
+        },
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CloudFrontdevwebbucketPolicyD6F9DF3B": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "CloudFrontdevwebbucketD9BFDF8F",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false",
+                },
+              },
+              "Effect": "Deny",
+              "Principal": {
+                "AWS": "*",
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "CloudFrontdevwebbucketD9BFDF8F",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "CloudFrontdevwebbucketD9BFDF8F",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": [
+                "s3:PutBucketPolicy",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn",
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "CloudFrontdevwebbucketD9BFDF8F",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "CloudFrontdevwebbucketD9BFDF8F",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+            {
+              "Action": "s3:GetObject",
+              "Condition": {
+                "StringEquals": {
+                  "AWS:SourceArn": {
+                    "Fn::Join": [
+                      "",
+                      [
+                        "arn:",
+                        {
+                          "Ref": "AWS::Partition",
+                        },
+                        ":cloudfront::",
+                        {
+                          "Ref": "AWS::AccountId",
+                        },
+                        ":distribution/",
+                        {
+                          "Ref": "CloudFrontdevdistribution7BD77D6C",
+                        },
+                      ],
+                    ],
+                  },
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cloudfront.amazonaws.com",
+              },
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    {
+                      "Fn::GetAtt": [
+                        "CloudFrontdevwebbucketD9BFDF8F",
+                        "Arn",
+                      ],
+                    },
+                    "/*",
+                  ],
+                ],
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F": {
+      "DependsOn": [
+        "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+      ],
+      "Properties": {
+        "Code": {
+          "S3Bucket": "cdk-hnb659fds-assets-533570606590-us-east-1",
+          "S3Key": "faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip",
+        },
+        "Description": {
+          "Fn::Join": [
+            "",
+            [
+              "Lambda function for auto-deleting objects in ",
+              {
+                "Ref": "CloudFrontdevwebbucketD9BFDF8F",
+              },
+              " S3 bucket.",
+            ],
+          ],
+        },
+        "Handler": "index.handler",
+        "MemorySize": 128,
+        "Role": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs20.x",
+        "Timeout": 900,
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Sub": "arn:\${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "Route53aliasrecorde3b0c442982EFDB858": {
+      "Properties": {
+        "AliasTarget": {
+          "DNSName": {
+            "Fn::GetAtt": [
+              "CloudFrontdevdistribution7BD77D6C",
+              "DomainName",
+            ],
+          },
+          "HostedZoneId": {
+            "Fn::FindInMap": [
+              "AWSCloudFrontPartitionHostedZoneIdMap",
+              {
+                "Ref": "AWS::Partition",
+              },
+              "zoneId",
+            ],
+          },
+        },
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "Name": "dev.nuts-choco.com.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "Route53certificateAFAFED4C": {
+      "Properties": {
+        "DomainName": "dev.nuts-choco.com",
+        "DomainValidationOptions": [
+          {
+            "DomainName": "dev.nuts-choco.com",
+            "HostedZoneId": {
+              "Ref": "Route53hostedzone82773177",
+            },
+          },
+        ],
+        "SubjectAlternativeNames": [
+          "*.dev.nuts-choco.com",
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "AppStack/Route53/certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
+      },
+      "Type": "AWS::CertificateManager::Certificate",
+    },
+    "Route53dnssec7B8EFE03": {
+      "DependsOn": [
+        "Route53dnsseckskC7DA8E60",
+      ],
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+      },
+      "Type": "AWS::Route53::DNSSEC",
+    },
+    "Route53dnsseckey05131871": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "EnableKeyRotation": false,
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::533570606590:root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "kms:DescribeKey",
+                "kms:GetPublicKey",
+                "kms:Sign",
+              ],
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": "533570606590",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "dnssec-route53.amazonaws.com",
+              },
+              "Resource": "*",
+            },
+            {
+              "Action": "kms:CreateGrant",
+              "Condition": {
+                "Bool": {
+                  "kms:GrantIsForAWSResource": true,
+                },
+                "StringEquals": {
+                  "aws:SourceAccount": "533570606590",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "dnssec-route53.amazonaws.com",
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "KeySpec": "ECC_NIST_P256",
+        "KeyUsage": "SIGN_VERIFY",
+      },
+      "Type": "AWS::KMS::Key",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "Route53dnsseckeyAlias90EA0997": {
+      "Properties": {
+        "AliasName": "alias/nuts-choco-com-dnssec-key",
+        "TargetKeyId": {
+          "Fn::GetAtt": [
+            "Route53dnsseckey05131871",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::KMS::Alias",
+    },
+    "Route53dnsseckskC7DA8E60": {
+      "DependsOn": [
+        "Route53dnsseckey05131871",
+      ],
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "KeyManagementServiceArn": {
+          "Fn::GetAtt": [
+            "Route53dnsseckey05131871",
+            "Arn",
+          ],
+        },
+        "Name": "devKeyNutsChocoCom",
+        "Status": "ACTIVE",
+      },
+      "Type": "AWS::Route53::KeySigningKey",
+    },
+    "Route53hostedzone82773177": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "Name": "dev.nuts-choco.com.",
+      },
+      "Type": "AWS::Route53::HostedZone",
+      "UpdateReplacePolicy": "Delete",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`Matches the snapshot appStack prd 1`] = `
 {
   "Mappings": {
     "AWSCloudFrontPartitionHostedZoneIdMap": {

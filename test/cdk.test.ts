@@ -17,7 +17,7 @@ test(`Matches the snapshot rootStack`, () => {
   ).toMatchSnapshot();
 });
 
-test(`Matches the snapshot appStack`, () => {
+test(`Matches the snapshot appStack prd`, () => {
   const app = new cdk.App();
   expect(
     Template.fromStack(
@@ -27,6 +27,21 @@ test(`Matches the snapshot appStack`, () => {
           region: 'us-east-1',
         },
         shortEnv: 'prd',
+      }),
+    ).toJSON(),
+  ).toMatchSnapshot();
+});
+
+test(`Matches the snapshot appStack dev`, () => {
+  const app = new cdk.App();
+  expect(
+    Template.fromStack(
+      new AppStack(app, 'AppStack', {
+        env: {
+          account: '533570606590',
+          region: 'us-east-1',
+        },
+        shortEnv: 'dev',
       }),
     ).toJSON(),
   ).toMatchSnapshot();

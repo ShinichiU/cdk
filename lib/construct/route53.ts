@@ -1,6 +1,6 @@
 import {
-  CfnDNSSEC,
-  CfnKeySigningKey,
+  // CfnDNSSEC,
+  // CfnKeySigningKey,
   CnameRecord,
   HostedZone,
   IHostedZone,
@@ -9,8 +9,8 @@ import {
 } from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 import { ShortEnvironments } from '../type/env';
-import { CfnResource, RemovalPolicy } from 'aws-cdk-lib';
-import { Key } from 'aws-cdk-lib/aws-kms';
+import { RemovalPolicy } from 'aws-cdk-lib';
+// import { Key } from 'aws-cdk-lib/aws-kms';
 
 interface Props {
   shortEnv: ShortEnvironments;
@@ -29,23 +29,23 @@ export class Route53 extends Construct {
     this.hostedZone = new HostedZone(this, 'hosted-zone', {
       zoneName: domain,
     });
-    this.hostedZone.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    this.hostedZone.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-    // DNSSEC 署名用 KMS キーを作成
-    const key = new Key(this, 'dnssec-key');
-    // KSK(鍵署名鍵) for dnssec
-    const keySigningKey = new CfnKeySigningKey(this, 'dnssec-ksk', {
-      hostedZoneId: this.hostedZone.hostedZoneId,
-      keyManagementServiceArn: key.keyArn,
-      name: `${props.shortEnv}KeyNutsChocoCom`,
-      status: 'ACTIVE',
-    });
-    keySigningKey.addDependency(key.node.defaultChild as CfnResource);
-    // associate the KSK
-    const dnssec = new CfnDNSSEC(this, 'dnssec', {
-      hostedZoneId: this.hostedZone.hostedZoneId,
-    });
-    dnssec.addDependency(keySigningKey);
+    // // DNSSEC 署名用 KMS キーを作成
+    // const key = new Key(this, 'dnssec-key');
+    // // KSK(鍵署名鍵) for dnssec
+    // const keySigningKey = new CfnKeySigningKey(this, 'dnssec-ksk', {
+    //   hostedZoneId: this.hostedZone.hostedZoneId,
+    //   keyManagementServiceArn: key.keyArn,
+    //   name: `${props.shortEnv}KeyNutsChocoCom`,
+    //   status: 'ACTIVE',
+    // });
+    // keySigningKey.addDependency(key.node.defaultChild as CfnResource);
+    // // associate the KSK
+    // const dnssec = new CfnDNSSEC(this, 'dnssec', {
+    //   hostedZoneId: this.hostedZone.hostedZoneId,
+    // });
+    // dnssec.addDependency(keySigningKey);
 
     if (props.shortEnv === 'prd') {
       // Google Workspace の MX レコードを設定

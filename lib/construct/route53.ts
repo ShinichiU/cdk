@@ -20,6 +20,7 @@ import {
   ICertificate,
 } from 'aws-cdk-lib/aws-certificatemanager';
 import { getConfig } from '../parameters/config';
+import { encryptSha256 } from '../util/encrypt';
 // import { Key } from 'aws-cdk-lib/aws-kms';
 
 interface Props {
@@ -162,7 +163,7 @@ export class Route53 extends Construct {
   }
 
   addAliasRecord(target: IAliasRecordTarget, hostName?: string) {
-    new ARecord(this, 'alias-record', {
+    new ARecord(this, `alias-record-${encryptSha256(hostName ?? '')}`, {
       zone: this.hostedZone,
       target: RecordTarget.fromAlias(target),
       recordName: hostName,

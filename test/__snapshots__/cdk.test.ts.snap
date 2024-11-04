@@ -331,7 +331,7 @@ exports[`Matches the snapshot appStack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
-    "Route53aliasrecord7A5C1026": {
+    "Route53aliasrecorde3b0c442982EFDB858": {
       "Properties": {
         "AliasTarget": {
           "DNSName": {

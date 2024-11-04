@@ -1,16 +1,25 @@
 import {
+  ARecord,
   // CfnDNSSEC,
   // CfnKeySigningKey,
   CnameRecord,
   HostedZone,
+  IAliasRecordTarget,
   IHostedZone,
   MxRecord,
   NsRecord,
+  RecordTarget,
   TxtRecord,
 } from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 import { ShortEnvironments } from '../type/env';
 import { RemovalPolicy } from 'aws-cdk-lib';
+import {
+  Certificate,
+  CertificateValidation,
+  ICertificate,
+} from 'aws-cdk-lib/aws-certificatemanager';
+import { getConfig } from '../parameters/config';
 // import { Key } from 'aws-cdk-lib/aws-kms';
 
 interface Props {
@@ -19,12 +28,10 @@ interface Props {
 
 export class Route53 extends Construct {
   private readonly hostedZone: IHostedZone;
+  public readonly certificate: ICertificate;
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
-    const domain =
-      props.shortEnv === 'prd'
-        ? 'nuts-choco.com'
-        : `${props.shortEnv}.nuts-choco.com`;
+    const domain = getConfig(props.shortEnv).domain;
 
     // Route53の設定
     this.hostedZone = new HostedZone(this, 'hosted-zone', {
@@ -146,5 +153,19 @@ export class Route53 extends Construct {
         ],
       });
     }
+
+    this.certificate = new Certificate(this, 'certificate', {
+      domainName: domain,
+      subjectAlternativeNames: [`*.${domain}`],
+      validation: CertificateValidation.fromDns(this.hostedZone),
+    });
+  }
+
+  addAliasRecord(target: IAliasRecordTarget, hostName?: string) {
+    new ARecord(this, 'alias-record', {
+      zone: this.hostedZone,
+      target: RecordTarget.fromAlias(target),
+      recordName: hostName,
+    });
   }
 }

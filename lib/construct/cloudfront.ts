@@ -6,14 +6,17 @@ import {
   CfnOutput,
   RemovalPolicy,
 } from 'aws-cdk-lib';
-import { Distribution } from 'aws-cdk-lib/aws-cloudfront';
+import { Distribution, ViewerProtocolPolicy } from 'aws-cdk-lib/aws-cloudfront';
+import { getConfig } from '../parameters/config';
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager';
 
 interface Props {
   shortEnv: ShortEnvironments;
+  certificate: ICertificate;
 }
 export class CloudFront extends Construct {
   private readonly webBucket: aws_s3.Bucket;
-  private readonly distribution: Distribution;
+  public readonly distribution: Distribution;
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
     this.webBucket = new aws_s3.Bucket(this, `${props.shortEnv}-web-bucket`, {
@@ -25,6 +28,7 @@ export class CloudFront extends Construct {
       enforceSSL: true,
     });
 
+    const domain = getConfig(props.shortEnv).domain;
     this.distribution = new Distribution(
       this,
       `${props.shortEnv}-distribution`,
@@ -34,7 +38,10 @@ export class CloudFront extends Construct {
           origin: aws_cloudfront_origins.S3BucketOrigin.withOriginAccessControl(
             this.webBucket,
           ),
+          viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         },
+        domainNames: [domain],
+        certificate: props.certificate,
       },
     );
 

@@ -2,6 +2,16 @@
 
 exports[`Matches the snapshot appStack 1`] = `
 {
+  "Mappings": {
+    "AWSCloudFrontPartitionHostedZoneIdMap": {
+      "aws": {
+        "zoneId": "Z2FDTNDATAQYW2",
+      },
+      "aws-cn": {
+        "zoneId": "Z3RFFRIM2A3IF5",
+      },
+    },
+  },
   "Outputs": {
     "CloudFrontwebBucketName0E44B808": {
       "Value": {
@@ -36,11 +46,14 @@ exports[`Matches the snapshot appStack 1`] = `
     "CloudFrontprddistribution0A453D49": {
       "Properties": {
         "DistributionConfig": {
+          "Aliases": [
+            "nuts-choco.com",
+          ],
           "DefaultCacheBehavior": {
             "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
             "Compress": true,
             "TargetOriginId": "AppStackCloudFrontprddistributionOrigin1B186F0A7",
-            "ViewerProtocolPolicy": "allow-all",
+            "ViewerProtocolPolicy": "redirect-to-https",
           },
           "DefaultRootObject": "index.html",
           "Enabled": true,
@@ -66,6 +79,13 @@ exports[`Matches the snapshot appStack 1`] = `
               },
             },
           ],
+          "ViewerCertificate": {
+            "AcmCertificateArn": {
+              "Ref": "Route53certificateAFAFED4C",
+            },
+            "MinimumProtocolVersion": "TLSv1.2_2021",
+            "SslSupportMethod": "sni-only",
+          },
         },
       },
       "Type": "AWS::CloudFront::Distribution",
@@ -310,6 +330,57 @@ exports[`Matches the snapshot appStack 1`] = `
         ],
       },
       "Type": "AWS::IAM::Role",
+    },
+    "Route53aliasrecord7A5C1026": {
+      "Properties": {
+        "AliasTarget": {
+          "DNSName": {
+            "Fn::GetAtt": [
+              "CloudFrontprddistribution0A453D49",
+              "DomainName",
+            ],
+          },
+          "HostedZoneId": {
+            "Fn::FindInMap": [
+              "AWSCloudFrontPartitionHostedZoneIdMap",
+              {
+                "Ref": "AWS::Partition",
+              },
+              "zoneId",
+            ],
+          },
+        },
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "Name": "nuts-choco.com.",
+        "Type": "A",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "Route53certificateAFAFED4C": {
+      "Properties": {
+        "DomainName": "nuts-choco.com",
+        "DomainValidationOptions": [
+          {
+            "DomainName": "nuts-choco.com",
+            "HostedZoneId": {
+              "Ref": "Route53hostedzone82773177",
+            },
+          },
+        ],
+        "SubjectAlternativeNames": [
+          "*.nuts-choco.com",
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "AppStack/Route53/certificate",
+          },
+        ],
+        "ValidationMethod": "DNS",
+      },
+      "Type": "AWS::CertificateManager::Certificate",
     },
     "Route53devnsrecords308B19F8": {
       "Properties": {

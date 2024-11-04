@@ -12,11 +12,15 @@ export class AppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id, props);
 
-    new Route53(this, 'Route53', {
+    const route53 = new Route53(this, 'Route53', {
       shortEnv: props.shortEnv,
     });
-    new CloudFront(this, 'CloudFront', {
+    const cloudfront = new CloudFront(this, 'CloudFront', {
       shortEnv: props.shortEnv,
+      certificate: route53.certificate,
     });
+    route53.addAliasRecord(
+      new cdk.aws_route53_targets.CloudFrontTarget(cloudfront.distribution),
+    );
   }
 }

@@ -9,6 +9,7 @@ import {
 import {
   Distribution,
   Function,
+  FunctionAssociation,
   FunctionCode,
   FunctionEventType,
   FunctionRuntime,
@@ -36,28 +37,36 @@ export class CloudFront extends Construct {
       enforceSSL: true,
     });
 
-    // prd 以外は Basic 認証を設定
-    const functionAssociations =
-      props.shortEnv !== 'prd'
-        ? [
-            {
-              eventType: FunctionEventType.VIEWER_REQUEST,
-              function: new Function(
-                this,
-                `${props.shortEnv}-basic-auth-function`,
-                {
-                  runtime: FunctionRuntime.JS_2_0,
-                  code: FunctionCode.fromFile({
-                    filePath: path.join(
-                      __dirname,
-                      '../../lambda/cloudfront/functions/basic/src/index.js',
-                    ),
-                  }),
-                },
-              ),
-            },
-          ]
-        : undefined;
+    const functionAssociations: FunctionAssociation[] = [
+      {
+        eventType: FunctionEventType.VIEWER_RESPONSE,
+        function: new Function(this, `${props.shortEnv}-security-function`, {
+          runtime: FunctionRuntime.JS_2_0,
+          code: FunctionCode.fromFile({
+            filePath: path.join(
+              __dirname,
+              '../../lambda/cloudfront/functions/security/src/index.js',
+            ),
+          }),
+        }),
+      },
+    ];
+
+    if (props.shortEnv !== 'prd') {
+      // prd 以外は Basic 認証を設定
+      functionAssociations.push({
+        eventType: FunctionEventType.VIEWER_REQUEST,
+        function: new Function(this, `${props.shortEnv}-basic-auth-function`, {
+          runtime: FunctionRuntime.JS_2_0,
+          code: FunctionCode.fromFile({
+            filePath: path.join(
+              __dirname,
+              '../../lambda/cloudfront/functions/basic/src/index.js',
+            ),
+          }),
+        }),
+      });
+    }
 
     const domain = getConfig(props.shortEnv).domain;
     this.distribution = new Distribution(

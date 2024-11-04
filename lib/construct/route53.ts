@@ -180,7 +180,7 @@ export class Route53 extends Construct {
         recordName: '_dmarc',
         values: [
           // 認証されていないメールを拒否する
-          'v=DMARC1; p=reject; rua=mailto:dmarc-report@nuts-choco.com ruf=mailto:dmarc-report@nuts-choco.com',
+          'v=DMARC1; p=reject; rua=mailto:dmarc-report@nuts-choco.com; ruf=mailto:dmarc-report@nuts-choco.com',
         ],
       });
 

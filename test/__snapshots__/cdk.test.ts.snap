@@ -420,7 +420,7 @@ exports[`Matches the snapshot appStack 1`] = `
         },
         "Name": "_dmarc.nuts-choco.com.",
         "ResourceRecords": [
-          ""v=DMARC1; p=reject; rua=mailto:dmarc-report@nuts-choco.com ruf=mailto:dmarc-report@nuts-choco.com"",
+          ""v=DMARC1; p=reject; rua=mailto:dmarc-report@nuts-choco.com; ruf=mailto:dmarc-report@nuts-choco.com"",
         ],
         "TTL": "1800",
         "Type": "TXT",

@@ -391,7 +391,7 @@ exports[`Matches the snapshot stack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"9c965a9713c1c47871f131451c90d2c025ec93c9578c98bc6484f114fbd06221"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"715348d97cc9117577184fc4a82152b539c99dc6c30336e09a236e17179d0cd2"}]",
                   "ProjectName": {
                     "Ref": "CdkPipelinecdkpipelinepipelineBuildSynthCdkBuildProject9D1F542C",
                   },
@@ -781,16 +781,11 @@ exports[`Matches the snapshot stack 1`] = `
           "BuildSpec": "{
   "version": "0.2",
   "phases": {
-    "install": {
-      "commands": [
-        "npm install -g aws-cdk"
-      ]
-    },
     "build": {
       "commands": [
         "npm ci",
         "npm run build",
-        "npx cdk synth"
+        "npm run cdk synth"
       ]
     }
   },

@@ -1,7 +1,7 @@
 import {
   ARecord,
-  // CfnDNSSEC,
-  // CfnKeySigningKey,
+  CfnDNSSEC,
+  CfnKeySigningKey,
   CnameRecord,
   HostedZone,
   IAliasRecordTarget,
@@ -13,7 +13,7 @@ import {
 } from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 import { ShortEnvironments } from '../type/env';
-import { RemovalPolicy } from 'aws-cdk-lib';
+import { aws_iam, CfnResource, RemovalPolicy, Stack } from 'aws-cdk-lib';
 import {
   Certificate,
   CertificateValidation,
@@ -21,7 +21,8 @@ import {
 } from 'aws-cdk-lib/aws-certificatemanager';
 import { getConfig } from '../parameters/config';
 import { encryptSha256 } from '../util/encrypt';
-// import { Key } from 'aws-cdk-lib/aws-kms';
+import { Key, KeySpec, KeyUsage } from 'aws-cdk-lib/aws-kms';
+import { Effect, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 
 interface Props {
   shortEnv: ShortEnvironments;
@@ -40,21 +41,61 @@ export class Route53 extends Construct {
     });
     this.hostedZone.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-    // // DNSSEC 署名用 KMS キーを作成
-    // const key = new Key(this, 'dnssec-key');
-    // // KSK(鍵署名鍵) for dnssec
-    // const keySigningKey = new CfnKeySigningKey(this, 'dnssec-ksk', {
-    //   hostedZoneId: this.hostedZone.hostedZoneId,
-    //   keyManagementServiceArn: key.keyArn,
-    //   name: `${props.shortEnv}KeyNutsChocoCom`,
-    //   status: 'ACTIVE',
-    // });
-    // keySigningKey.addDependency(key.node.defaultChild as CfnResource);
-    // // associate the KSK
-    // const dnssec = new CfnDNSSEC(this, 'dnssec', {
-    //   hostedZoneId: this.hostedZone.hostedZoneId,
-    // });
-    // dnssec.addDependency(keySigningKey);
+    const dnssecKeyAlias = 'nuts-choco-com-dnssec-key';
+    // DNSSEC 署名用 KMS キーを作成
+    const key = new Key(this, 'dnssec-key', {
+      enableKeyRotation: false,
+      removalPolicy: RemovalPolicy.DESTROY,
+      alias: dnssecKeyAlias,
+      keySpec: KeySpec.ECC_NIST_P256,
+      keyUsage: KeyUsage.SIGN_VERIFY,
+    });
+    key.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        principals: [
+          new aws_iam.ServicePrincipal('dnssec-route53.amazonaws.com'),
+        ],
+        actions: ['kms:DescribeKey', 'kms:GetPublicKey', 'kms:Sign'],
+        resources: ['*'],
+        conditions: {
+          StringEquals: {
+            'aws:SourceAccount': Stack.of(this).account,
+          },
+        },
+      }),
+    );
+    key.addToResourcePolicy(
+      new PolicyStatement({
+        effect: Effect.ALLOW,
+        principals: [
+          new aws_iam.ServicePrincipal('dnssec-route53.amazonaws.com'),
+        ],
+        actions: ['kms:CreateGrant'],
+        resources: ['*'],
+        conditions: {
+          StringEquals: {
+            'aws:SourceAccount': Stack.of(this).account,
+          },
+          Bool: {
+            'kms:GrantIsForAWSResource': true,
+          },
+        },
+      }),
+    );
+    // KSK(鍵署名鍵) for dnssec
+    const keySigningKey = new CfnKeySigningKey(this, 'dnssec-ksk', {
+      hostedZoneId: this.hostedZone.hostedZoneId,
+      keyManagementServiceArn: key.keyArn,
+      name: `${props.shortEnv}KeyNutsChocoCom`,
+      status: 'ACTIVE',
+    });
+    keySigningKey.addDependency(key.node.defaultChild as CfnResource);
+    // associate the KSK
+    const dnssec = new CfnDNSSEC(this, 'dnssec', {
+      hostedZoneId: this.hostedZone.hostedZoneId,
+    });
+    dnssec.addDependency(keySigningKey);
 
     if (props.shortEnv === 'prd') {
       // Google Workspace の MX レコードを設定

@@ -413,6 +413,115 @@ exports[`Matches the snapshot appStack 1`] = `
       },
       "Type": "AWS::Route53::RecordSet",
     },
+    "Route53dnssec7B8EFE03": {
+      "DependsOn": [
+        "Route53dnsseckskC7DA8E60",
+      ],
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+      },
+      "Type": "AWS::Route53::DNSSEC",
+    },
+    "Route53dnsseckey05131871": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "EnableKeyRotation": false,
+        "KeyPolicy": {
+          "Statement": [
+            {
+              "Action": "kms:*",
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition",
+                      },
+                      ":iam::992382384155:root",
+                    ],
+                  ],
+                },
+              },
+              "Resource": "*",
+            },
+            {
+              "Action": [
+                "kms:DescribeKey",
+                "kms:GetPublicKey",
+                "kms:Sign",
+              ],
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": "992382384155",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "dnssec-route53.amazonaws.com",
+              },
+              "Resource": "*",
+            },
+            {
+              "Action": "kms:CreateGrant",
+              "Condition": {
+                "Bool": {
+                  "kms:GrantIsForAWSResource": true,
+                },
+                "StringEquals": {
+                  "aws:SourceAccount": "992382384155",
+                },
+              },
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "dnssec-route53.amazonaws.com",
+              },
+              "Resource": "*",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "KeySpec": "ECC_NIST_P256",
+        "KeyUsage": "SIGN_VERIFY",
+      },
+      "Type": "AWS::KMS::Key",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "Route53dnsseckeyAlias90EA0997": {
+      "Properties": {
+        "AliasName": "alias/nuts-choco-com-dnssec-key",
+        "TargetKeyId": {
+          "Fn::GetAtt": [
+            "Route53dnsseckey05131871",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::KMS::Alias",
+    },
+    "Route53dnsseckskC7DA8E60": {
+      "DependsOn": [
+        "Route53dnsseckey05131871",
+      ],
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "KeyManagementServiceArn": {
+          "Fn::GetAtt": [
+            "Route53dnsseckey05131871",
+            "Arn",
+          ],
+        },
+        "Name": "prdKeyNutsChocoCom",
+        "Status": "ACTIVE",
+      },
+      "Type": "AWS::Route53::KeySigningKey",
+    },
     "Route53gwsdkimtxt8B37E544": {
       "Properties": {
         "HostedZoneId": {

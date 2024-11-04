@@ -9,7 +9,7 @@ import {
 } from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 import { ShortEnvironments } from '../type/env';
-import { RemovalPolicy } from 'aws-cdk-lib';
+import { CfnResource, RemovalPolicy } from 'aws-cdk-lib';
 import { Key } from 'aws-cdk-lib/aws-kms';
 
 interface Props {
@@ -40,6 +40,7 @@ export class Route53 extends Construct {
       name: `${props.shortEnv}KeyNutsChocoCom`,
       status: 'ACTIVE',
     });
+    keySigningKey.addDependency(key.node.defaultChild as CfnResource);
     // associate the KSK
     const dnssec = new CfnDNSSEC(this, 'dnssec', {
       hostedZoneId: this.hostedZone.hostedZoneId,

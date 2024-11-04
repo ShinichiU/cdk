@@ -487,15 +487,7 @@ exports[`Matches the snapshot stack 1`] = `
                         {
                           "Ref": "AWS::Partition",
                         },
-                        ":iam::",
-                        {
-                          "Ref": "AWS::AccountId",
-                        },
-                        ":role/cdk-hnb659fds-cfn-exec-role-",
-                        {
-                          "Ref": "AWS::AccountId",
-                        },
-                        "-",
+                        ":iam::992382384155:role/cdk-hnb659fds-cfn-exec-role-992382384155-",
                         {
                           "Ref": "AWS::Region",
                         },
@@ -519,15 +511,7 @@ exports[`Matches the snapshot stack 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
+                      ":iam::992382384155:role/cdk-hnb659fds-deploy-role-992382384155-",
                       {
                         "Ref": "AWS::Region",
                       },
@@ -557,15 +541,7 @@ exports[`Matches the snapshot stack 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
+                      ":iam::992382384155:role/cdk-hnb659fds-deploy-role-992382384155-",
                       {
                         "Ref": "AWS::Region",
                       },
@@ -648,15 +624,7 @@ exports[`Matches the snapshot stack 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
+                      ":iam::992382384155:role/cdk-hnb659fds-deploy-role-992382384155-",
                       {
                         "Ref": "AWS::Region",
                       },
@@ -744,15 +712,7 @@ exports[`Matches the snapshot stack 1`] = `
                       {
                         "Ref": "AWS::Partition",
                       },
-                      ":iam::",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      ":role/cdk-hnb659fds-deploy-role-",
-                      {
-                        "Ref": "AWS::AccountId",
-                      },
-                      "-",
+                      ":iam::992382384155:role/cdk-hnb659fds-deploy-role-992382384155-",
                       {
                         "Ref": "AWS::Region",
                       },
@@ -1127,15 +1087,7 @@ exports[`Matches the snapshot stack 1`] = `
                     {
                       "Ref": "AWS::Partition",
                     },
-                    ":iam::",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    ":role/cdk-hnb659fds-deploy-role-",
-                    {
-                      "Ref": "AWS::AccountId",
-                    },
-                    "-",
+                    ":iam::992382384155:role/cdk-hnb659fds-deploy-role-992382384155-",
                     {
                       "Ref": "AWS::Region",
                     },

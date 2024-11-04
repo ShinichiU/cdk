@@ -12,6 +12,8 @@ import { ShortEnvironments } from '../type/env';
 import { AppStack } from '../stack/app-stack';
 
 export class Pipeline extends Construct {
+  readonly prdAccountId: string = '992382384155';
+  readonly devAccountId: string = '533570606590';
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
@@ -49,7 +51,7 @@ export class Pipeline extends Construct {
     const prd = new AppStage(this, 'prd', {
       shortEnv: 'prd',
       env: {
-        account: process.env.CDK_DEFAULT_ACCOUNT,
+        account: this.prdAccountId,
         region: process.env.CDK_DEFAULT_REGION,
       },
     });

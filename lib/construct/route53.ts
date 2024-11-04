@@ -5,6 +5,7 @@ import {
   HostedZone,
   IHostedZone,
   MxRecord,
+  NsRecord,
   TxtRecord,
 } from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
@@ -122,6 +123,12 @@ export class Route53 extends Construct {
           'v=DMARC1; p=reject; rua=mailto:dmarc-report@nuts-choco.com ruf=mailto:dmarc-report@nuts-choco.com',
         ],
       });
+
+      // dev.nuts-choco.com の NS レコードを設定
+      new NsRecord(this, 'dev-ns-records', {
+        zone: this.hostedZone,
+        values: ['ns-897.awsdns-48.net', 'ns-303.awsdns-37.com', 'ns-1522.awsdns-62.org', 'ns-1659.awsdns-15.co.uk'],
+      })
     }
   }
 }

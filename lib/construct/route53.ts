@@ -97,6 +97,16 @@ export class Route53 extends Construct {
         recordName: '9232917',
         domainName: 'sendgrid.net',
       });
+      new CnameRecord(this, 'sendgrid-cname-records-em', {
+        zone: this.hostedZone,
+        recordName: 'em9501',
+        domainName: 'u9232917.wl168.sendgrid.net',
+      });
+      new CnameRecord(this, 'sendgrid-cname-records-url', {
+        zone: this.hostedZone,
+        recordName: 'url9631',
+        domainName: 'sendgrid.net',
+      });
       // Sendgrid DKiM レコードを設定 - 2レコード
       new CnameRecord(this, 'sendgrid-dkim-txt-1', {
         zone: this.hostedZone,

@@ -412,6 +412,34 @@ exports[`Matches the snapshot appStack 1`] = `
       },
       "Type": "AWS::Route53::RecordSet",
     },
+    "Route53sendgridcnamerecordsemC95A5F37": {
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "Name": "em9501.nuts-choco.com.",
+        "ResourceRecords": [
+          "u9232917.wl168.sendgrid.net",
+        ],
+        "TTL": "1800",
+        "Type": "CNAME",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
+    "Route53sendgridcnamerecordsurl0E7D71CC": {
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "Name": "url9631.nuts-choco.com.",
+        "ResourceRecords": [
+          "sendgrid.net",
+        ],
+        "TTL": "1800",
+        "Type": "CNAME",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
     "Route53sendgriddkimtxt129C08699": {
       "Properties": {
         "HostedZoneId": {

@@ -109,13 +109,14 @@ export class Route53 extends Construct {
       });
 
       // Google Workspace, Sendgrid の TXT レコードを設定
-      new TxtRecord(this, 'google-records', {
+      new TxtRecord(this, 'gws-sendgrid-records', {
         zone: this.hostedZone,
         values: ['v=spf1 include:_spf.google.com include:sendgrid.net ~all'],
       });
       // _dmarc record を設定
       new TxtRecord(this, 'dmarc-records', {
         zone: this.hostedZone,
+        recordName: '_dmarc',
         values: [
           // 認証されていないメールを拒否する
           'v=DMARC1; p=reject; rua=mailto:dmarc-report@nuts-choco.com ruf=mailto:dmarc-report@nuts-choco.com',

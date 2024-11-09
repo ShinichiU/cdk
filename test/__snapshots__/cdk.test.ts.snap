@@ -1372,9 +1372,9 @@ exports[`Matches the snapshot rootStack 1`] = `
               "Value": "22",
             },
           ],
-          "Image": "aws/codebuild/amazonlinux2-x86_64-standard:5.0",
+          "Image": "aws/codebuild/standard:7.0",
           "ImagePullCredentialsType": "CODEBUILD",
-          "PrivilegedMode": true,
+          "PrivilegedMode": false,
           "Type": "LINUX_CONTAINER",
         },
         "LogsConfig": {
@@ -1411,11 +1411,6 @@ exports[`Matches the snapshot rootStack 1`] = `
         "n exec \\"$NODE_VERSION\\" npx eslint \\"./{bin,lib,src,test}/**/*.{ts,tsx}\\" --max-warnings=0",
         "echo \\"== Doing test\\"",
         "n exec \\"$NODE_VERSION\\" npm run test"
-      ]
-    },
-    "post_build": {
-      "commands": [
-        "npm run cdk synth"
       ]
     }
   }

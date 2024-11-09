@@ -2,7 +2,6 @@ import {
   BuildSpec,
   EventAction,
   FilterGroup,
-  LinuxBuildImage,
   Project,
   Source,
 } from 'aws-cdk-lib/aws-codebuild';

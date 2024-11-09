@@ -6,19 +6,8 @@ import {
   CfnOutput,
   Duration,
   RemovalPolicy,
+  aws_cloudfront as cloudfront,
 } from 'aws-cdk-lib';
-import {
-  Distribution,
-  Function,
-  FunctionAssociation,
-  FunctionCode,
-  FunctionEventType,
-  FunctionRuntime,
-  HeadersFrameOption,
-  HeadersReferrerPolicy,
-  ResponseHeadersPolicy,
-  ViewerProtocolPolicy,
-} from 'aws-cdk-lib/aws-cloudfront';
 import { getConfig } from '../parameters/config';
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager';
 import * as path from 'path';
@@ -28,7 +17,7 @@ interface Props {
 }
 export class CloudFront extends Construct {
   private readonly webBucket: aws_s3.Bucket;
-  public readonly distribution: Distribution;
+  public readonly distribution: cloudfront.Distribution;
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
     this.webBucket = new aws_s3.Bucket(this, `${props.shortEnv}-web-bucket`, {
@@ -40,17 +29,17 @@ export class CloudFront extends Construct {
       enforceSSL: true,
     });
 
-    const functionAssociations: FunctionAssociation[] | undefined =
+    const functionAssociations: cloudfront.FunctionAssociation[] | undefined =
       props.shortEnv !== 'prd'
         ? [
             {
-              eventType: FunctionEventType.VIEWER_REQUEST,
-              function: new Function(
+              eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+              function: new cloudfront.Function(
                 this,
                 `${props.shortEnv}-basic-auth-function`,
                 {
-                  runtime: FunctionRuntime.JS_2_0,
-                  code: FunctionCode.fromFile({
+                  runtime: cloudfront.FunctionRuntime.JS_2_0,
+                  code: cloudfront.FunctionCode.fromFile({
                     filePath: path.join(
                       __dirname,
                       '../../lambda/cloudfront/functions/basic/src/index.js',
@@ -62,21 +51,21 @@ export class CloudFront extends Construct {
           ]
         : undefined;
 
-    const responseHeadersPolicy = new ResponseHeadersPolicy(
+    const responseHeadersPolicy = new cloudfront.ResponseHeadersPolicy(
       this,
       `${props.shortEnv}-response-headers`,
       {
         securityHeadersBehavior: {
           referrerPolicy: {
             referrerPolicy:
-              HeadersReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN,
+              cloudfront.HeadersReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN,
             override: true,
           },
           contentTypeOptions: {
             override: true,
           },
           frameOptions: {
-            frameOption: HeadersFrameOption.SAMEORIGIN,
+            frameOption: cloudfront.HeadersFrameOption.SAMEORIGIN,
             override: true,
           },
           strictTransportSecurity: {
@@ -96,7 +85,7 @@ export class CloudFront extends Construct {
     );
 
     const domain = getConfig(props.shortEnv).domain;
-    this.distribution = new Distribution(
+    this.distribution = new cloudfront.Distribution(
       this,
       `${props.shortEnv}-distribution`,
       {
@@ -105,7 +94,8 @@ export class CloudFront extends Construct {
           origin: aws_cloudfront_origins.S3BucketOrigin.withOriginAccessControl(
             this.webBucket,
           ),
-          viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+          viewerProtocolPolicy:
+            cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           functionAssociations,
           responseHeadersPolicy,
         },

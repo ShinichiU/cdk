@@ -6,6 +6,7 @@
     "choco",
     "codeconnections",
     "DMARC",
+    "dnssec",
     "domainkey",
     "googlemail",
     "nosniff",

@@ -1,20 +1,12 @@
-import {
-  ARecord,
-  CfnDNSSEC,
-  CfnKeySigningKey,
-  CnameRecord,
-  DsRecord,
-  HostedZone,
-  IAliasRecordTarget,
-  IHostedZone,
-  MxRecord,
-  NsRecord,
-  RecordTarget,
-  TxtRecord,
-} from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 import { ShortEnvironments } from '../type/env';
-import { aws_iam, CfnResource, RemovalPolicy, Stack } from 'aws-cdk-lib';
+import {
+  aws_iam as iam,
+  CfnResource,
+  RemovalPolicy,
+  Stack,
+  aws_route53 as route53,
+} from 'aws-cdk-lib';
 import {
   Certificate,
   CertificateValidation,
@@ -30,14 +22,14 @@ interface Props {
 }
 
 export class Route53 extends Construct {
-  private readonly hostedZone: IHostedZone;
+  private readonly hostedZone: route53.IHostedZone;
   public readonly certificate: ICertificate;
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
     const domain = getConfig(props.shortEnv).domain;
 
     // Route53の設定
-    this.hostedZone = new HostedZone(this, 'hosted-zone', {
+    this.hostedZone = new route53.HostedZone(this, 'hosted-zone', {
       zoneName: domain,
     });
     this.hostedZone.applyRemovalPolicy(RemovalPolicy.DESTROY);
@@ -54,9 +46,7 @@ export class Route53 extends Construct {
     key.addToResourcePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        principals: [
-          new aws_iam.ServicePrincipal('dnssec-route53.amazonaws.com'),
-        ],
+        principals: [new iam.ServicePrincipal('dnssec-route53.amazonaws.com')],
         actions: ['kms:DescribeKey', 'kms:GetPublicKey', 'kms:Sign'],
         resources: ['*'],
         conditions: {
@@ -69,9 +59,7 @@ export class Route53 extends Construct {
     key.addToResourcePolicy(
       new PolicyStatement({
         effect: Effect.ALLOW,
-        principals: [
-          new aws_iam.ServicePrincipal('dnssec-route53.amazonaws.com'),
-        ],
+        principals: [new iam.ServicePrincipal('dnssec-route53.amazonaws.com')],
         actions: ['kms:CreateGrant'],
         resources: ['*'],
         conditions: {
@@ -85,7 +73,7 @@ export class Route53 extends Construct {
       }),
     );
     // KSK(鍵署名鍵) for dnssec
-    const keySigningKey = new CfnKeySigningKey(this, 'dnssec-ksk', {
+    const keySigningKey = new route53.CfnKeySigningKey(this, 'dnssec-ksk', {
       hostedZoneId: this.hostedZone.hostedZoneId,
       keyManagementServiceArn: key.keyArn,
       name: `${props.shortEnv}KeyNutsChocoCom`,
@@ -93,14 +81,14 @@ export class Route53 extends Construct {
     });
     keySigningKey.addDependency(key.node.defaultChild as CfnResource);
     // associate the KSK
-    const dnssec = new CfnDNSSEC(this, 'dnssec', {
+    const dnssec = new route53.CfnDNSSEC(this, 'dnssec', {
       hostedZoneId: this.hostedZone.hostedZoneId,
     });
     dnssec.addDependency(keySigningKey);
 
     if (props.shortEnv === 'prd') {
       // Google Workspace の MX レコードを設定
-      new MxRecord(this, 'gws-mx-records', {
+      new route53.MxRecord(this, 'gws-mx-records', {
         zone: this.hostedZone,
         values: [
           {
@@ -136,46 +124,46 @@ export class Route53 extends Construct {
       // GWS DKIM レコードを設定
       const googleDomainKey =
         'v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKcX1KcA+yJJ5ryBDjhFp2XXaDTX9fqNHGIsKg87T9+QppJILyQDdUmxKVxpR8KBNKiN+yCy/t8/dzOsBG9e9AQvmn9bqKCu5EjbbGK01NTON4lIBt3mjMgwdCXYy1eSAioXCIjELyjBY35Hbs0b91aCogx0Y+hGp1F8QyTw0c2wIDAQAB';
-      new TxtRecord(this, 'gws-dkim-txt', {
+      new route53.TxtRecord(this, 'gws-dkim-txt', {
         zone: this.hostedZone,
         recordName: 'google._domainkey',
         values: [googleDomainKey],
       });
       // sendgrid CNAME レコードを設定
-      new CnameRecord(this, 'sendgrid-cname-records', {
+      new route53.CnameRecord(this, 'sendgrid-cname-records', {
         zone: this.hostedZone,
         recordName: '9232917',
         domainName: 'sendgrid.net',
       });
-      new CnameRecord(this, 'sendgrid-cname-records-em', {
+      new route53.CnameRecord(this, 'sendgrid-cname-records-em', {
         zone: this.hostedZone,
         recordName: 'em9501',
         domainName: 'u9232917.wl168.sendgrid.net',
       });
-      new CnameRecord(this, 'sendgrid-cname-records-url', {
+      new route53.CnameRecord(this, 'sendgrid-cname-records-url', {
         zone: this.hostedZone,
         recordName: 'url9631',
         domainName: 'sendgrid.net',
       });
       // Sendgrid DKiM レコードを設定 - 2レコード
-      new CnameRecord(this, 'sendgrid-dkim-txt-1', {
+      new route53.CnameRecord(this, 'sendgrid-dkim-txt-1', {
         zone: this.hostedZone,
         recordName: 's1._domainkey',
         domainName: 's1.domainkey.u9232917.wl168.sendgrid.net',
       });
-      new CnameRecord(this, 'sendgrid-dkim-txt-2', {
+      new route53.CnameRecord(this, 'sendgrid-dkim-txt-2', {
         zone: this.hostedZone,
         recordName: 's2._domainkey',
         domainName: 's2.domainkey.u9232917.wl168.sendgrid.net',
       });
 
       // Google Workspace, Sendgrid の TXT レコードを設定
-      new TxtRecord(this, 'gws-sendgrid-records', {
+      new route53.TxtRecord(this, 'gws-sendgrid-records', {
         zone: this.hostedZone,
         values: ['v=spf1 include:_spf.google.com include:sendgrid.net ~all'],
       });
       // _dmarc record を設定
-      new TxtRecord(this, 'dmarc-records', {
+      new route53.TxtRecord(this, 'dmarc-records', {
         zone: this.hostedZone,
         recordName: '_dmarc',
         values: [
@@ -185,7 +173,7 @@ export class Route53 extends Construct {
       });
 
       // dev.nuts-choco.com の NS レコードを設定
-      new NsRecord(this, 'dev-ns-records', {
+      new route53.NsRecord(this, 'dev-ns-records', {
         zone: this.hostedZone,
         recordName: 'dev',
         values: [
@@ -196,7 +184,7 @@ export class Route53 extends Construct {
         ],
       });
       // dev.nuts-choco.com の DS レコードを設定
-      new DsRecord(this, 'dev-ds-records', {
+      new route53.DsRecord(this, 'dev-ds-records', {
         zone: this.hostedZone,
         recordName: 'dev',
         values: [
@@ -212,10 +200,10 @@ export class Route53 extends Construct {
     });
   }
 
-  addAliasRecord(target: IAliasRecordTarget, hostName?: string) {
-    new ARecord(this, `alias-record-${encryptSha256(hostName ?? '')}`, {
+  addAliasRecord(target: route53.IAliasRecordTarget, hostName?: string) {
+    new route53.ARecord(this, `alias-record-${encryptSha256(hostName ?? '')}`, {
       zone: this.hostedZone,
-      target: RecordTarget.fromAlias(target),
+      target: route53.RecordTarget.fromAlias(target),
       recordName: hostName,
     });
   }

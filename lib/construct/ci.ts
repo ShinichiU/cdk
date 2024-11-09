@@ -1,27 +1,30 @@
-import {
-  BuildSpec,
-  EventAction,
-  FilterGroup,
-  Project,
-  Source,
-} from 'aws-cdk-lib/aws-codebuild';
 import { Construct } from 'constructs';
 import { Config } from '../parameters/root';
-import { Duration, RemovalPolicy } from 'aws-cdk-lib';
+import {
+  Duration,
+  RemovalPolicy,
+  aws_codebuild as codebuild,
+} from 'aws-cdk-lib';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 
 export class CdkCi extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
     const config = Config;
-    const source = Source.gitHub({
+    const source = codebuild.Source.gitHub({
       owner: config.github.owner,
       repo: config.github.cdk.repo,
       webhookFilters: [
-        FilterGroup.inEventOf(EventAction.PULL_REQUEST_CREATED),
-        FilterGroup.inEventOf(EventAction.PULL_REQUEST_UPDATED),
-        FilterGroup.inEventOf(EventAction.PULL_REQUEST_REOPENED),
-        FilterGroup.inEventOf(EventAction.PUSH).andBranchIs(
+        codebuild.FilterGroup.inEventOf(
+          codebuild.EventAction.PULL_REQUEST_CREATED,
+        ),
+        codebuild.FilterGroup.inEventOf(
+          codebuild.EventAction.PULL_REQUEST_UPDATED,
+        ),
+        codebuild.FilterGroup.inEventOf(
+          codebuild.EventAction.PULL_REQUEST_REOPENED,
+        ),
+        codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(
           config.github.cdk.branch,
         ),
       ],
@@ -33,10 +36,10 @@ export class CdkCi extends Construct {
     logGroup.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
     const nCommand = 'n exec "$NODE_VERSION"';
-    new Project(this, 'cdkCIProject', {
+    new codebuild.Project(this, 'cdkCIProject', {
       source,
       badge: true,
-      buildSpec: BuildSpec.fromObject({
+      buildSpec: codebuild.BuildSpec.fromObject({
         version: '0.2',
         phases: {
           install: {

@@ -21,8 +21,7 @@ import {
 } from 'aws-cdk-lib/aws-cloudfront';
 import { getConfig } from '../parameters/config';
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager';
-import path = require('path');
-
+import * as path from 'path';
 interface Props {
   shortEnv: ShortEnvironments;
   certificate: ICertificate;

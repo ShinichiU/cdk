@@ -29,6 +29,7 @@
     "aws-cdk-lib": "2.166.0",
     "constructs": "^10.4.2",
     "deploy-time-build": "^0.3.23",
+    "esbuild": "^0.24.0",
     "source-map-support": "^0.5.21"
   }
 }

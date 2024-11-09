@@ -63,35 +63,11 @@ export class CloudFront extends Construct {
           ]
         : undefined;
 
-    const defaultSrc = "'self'";
-    const imgSrc =
-      "'self' https://googletagmanager.com https://*.analytics.google.com https://ssl.gstatic.com https://www.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp";
-    const scriptSrc =
-      "'self' https://googletagmanager.com https://tagmanager.google.com https://*.googletagmanager.com";
-    const styleSrc =
-      "'self' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com";
-    const fontSrc = "'self' https://fonts.gstatic.com data:";
-    const connectSrc =
-      "'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp";
     const responseHeadersPolicy = new ResponseHeadersPolicy(
       this,
       `${props.shortEnv}-response-headers`,
       {
         securityHeadersBehavior: {
-          contentSecurityPolicy: {
-            contentSecurityPolicy:
-              `default-src ${defaultSrc};` +
-              ` img-src ${imgSrc};` +
-              ` script-src ${scriptSrc};` +
-              ` style-src ${styleSrc};` +
-              ` font-src ${fontSrc};` +
-              ` connect-src ${connectSrc};` +
-              " base-uri 'self';" +
-              " object-src 'none';" +
-              " require-trusted-types-for 'script';" +
-              ' trusted-types;',
-            override: true,
-          },
           referrerPolicy: {
             referrerPolicy:
               HeadersReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN,

@@ -151,10 +151,6 @@ function handler(event) {
         "ResponseHeadersPolicyConfig": {
           "Name": "AppStackCloudFrontdevresponseheadersAFB04262",
           "SecurityHeadersConfig": {
-            "ContentSecurityPolicy": {
-              "ContentSecurityPolicy": "default-src 'self'; img-src 'self' https://googletagmanager.com https://*.analytics.google.com https://ssl.gstatic.com https://www.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp; script-src 'self' https://googletagmanager.com https://tagmanager.google.com https://*.googletagmanager.com; style-src 'self' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp; base-uri 'self'; object-src 'none'; require-trusted-types-for 'script'; trusted-types;",
-              "Override": true,
-            },
             "ContentTypeOptions": {
               "Override": true,
             },
@@ -720,10 +716,6 @@ exports[`Matches the snapshot appStack prd 1`] = `
         "ResponseHeadersPolicyConfig": {
           "Name": "AppStackCloudFrontprdresponseheaders661681E7",
           "SecurityHeadersConfig": {
-            "ContentSecurityPolicy": {
-              "ContentSecurityPolicy": "default-src 'self'; img-src 'self' https://googletagmanager.com https://*.analytics.google.com https://ssl.gstatic.com https://www.gstatic.com https://*.google-analytics.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp; script-src 'self' https://googletagmanager.com https://tagmanager.google.com https://*.googletagmanager.com; style-src 'self' https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.g.doubleclick.net https://*.google.com https://*.google.co.jp; base-uri 'self'; object-src 'none'; require-trusted-types-for 'script'; trusted-types;",
-              "Override": true,
-            },
             "ContentTypeOptions": {
               "Override": true,
             },

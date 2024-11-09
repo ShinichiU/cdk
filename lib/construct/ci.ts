@@ -2,7 +2,6 @@ import {
   BuildSpec,
   EventAction,
   FilterGroup,
-  LinuxBuildImage,
   Project,
   Source,
 } from 'aws-cdk-lib/aws-codebuild';
@@ -56,15 +55,8 @@ export class CdkCi extends Construct {
               'n exec "$NODE_VERSION" npm run test',
             ],
           },
-          post_build: {
-            commands: ['npm run cdk synth'],
-          },
         },
       }),
-      environment: {
-        buildImage: LinuxBuildImage.AMAZON_LINUX_2_5,
-        privileged: true,
-      },
       environmentVariables: {
         TZ: {
           value: 'Asia/Tokyo',

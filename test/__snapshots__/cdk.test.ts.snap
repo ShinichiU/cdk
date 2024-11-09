@@ -1346,6 +1346,9 @@ exports[`Matches the snapshot rootStack 1`] = `
   },
   "Resources": {
     "CdkCicdkCIProject56C493C5": {
+      "DependsOn": [
+        "GithubCredentialsgithubcredentialsDDFAB419",
+      ],
       "Properties": {
         "Artifacts": {
           "Type": "NO_ARTIFACTS",
@@ -1459,6 +1462,9 @@ exports[`Matches the snapshot rootStack 1`] = `
       "Type": "AWS::CodeBuild::Project",
     },
     "CdkCicdkCIProjectRole90A1D54E": {
+      "DependsOn": [
+        "GithubCredentialsgithubcredentialsDDFAB419",
+      ],
       "Properties": {
         "AssumeRolePolicyDocument": {
           "Statement": [
@@ -1476,6 +1482,9 @@ exports[`Matches the snapshot rootStack 1`] = `
       "Type": "AWS::IAM::Role",
     },
     "CdkCicdkCIProjectRoleDefaultPolicy9A6FCA49": {
+      "DependsOn": [
+        "GithubCredentialsgithubcredentialsDDFAB419",
+      ],
       "Properties": {
         "PolicyDocument": {
           "Statement": [
@@ -1573,6 +1582,9 @@ exports[`Matches the snapshot rootStack 1`] = `
     },
     "CdkCicdkcilogB8400E3F": {
       "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "GithubCredentialsgithubcredentialsDDFAB419",
+      ],
       "Properties": {
         "LogGroupName": "/cdk/ci",
         "RetentionInDays": 7,
@@ -3239,6 +3251,14 @@ exports[`Matches the snapshot rootStack 1`] = `
         },
       },
       "Type": "AWS::IAM::Role",
+    },
+    "GithubCredentialsgithubcredentialsDDFAB419": {
+      "Properties": {
+        "AuthType": "PERSONAL_ACCESS_TOKEN",
+        "ServerType": "GITHUB",
+        "Token": "{{resolve:secretsmanager:github/token:SecretString:personal_access_token::}}",
+      },
+      "Type": "AWS::CodeBuild::SourceCredential",
     },
   },
   "Rules": {

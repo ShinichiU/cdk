@@ -1,12 +1,6 @@
 import { Construct } from 'constructs';
-import * as codepipeline from 'aws-cdk-lib/aws-codepipeline';
-import {
-  CodePipeline,
-  CodePipelineSource,
-  ManualApprovalStep,
-  ShellStep,
-} from 'aws-cdk-lib/pipelines';
 import { CfnConnection } from 'aws-cdk-lib/aws-codeconnections';
+import { aws_codepipeline as pipeline, pipelines } from 'aws-cdk-lib';
 import { AppStage } from './pipeline/stage';
 import { Config } from '../parameters/root';
 
@@ -15,26 +9,22 @@ export class Pipeline extends Construct {
     super(scope, id);
 
     const config = Config;
-    const codePipeline = new codepipeline.Pipeline(
-      this,
-      'cdk-pipeline-pipeline',
-      {
-        crossAccountKeys: true,
-        pipelineType: codepipeline.PipelineType.V2,
-        restartExecutionOnUpdate: false,
-      },
-    );
+    const codePipeline = new pipeline.Pipeline(this, 'cdk-pipeline-pipeline', {
+      crossAccountKeys: true,
+      pipelineType: pipeline.PipelineType.V2,
+      restartExecutionOnUpdate: false,
+    });
 
     const connection = new CfnConnection(this, 'cdk-pipeline-connection', {
       connectionName: 'cdk-pipeline-connection',
       providerType: 'GitHub',
     });
 
-    const cdkPipeline = new CodePipeline(this, 'cdk-pipeline', {
+    const cdkPipeline = new pipelines.CodePipeline(this, 'cdk-pipeline', {
       codePipeline: codePipeline,
       selfMutation: true,
-      synth: new ShellStep('Synth', {
-        input: CodePipelineSource.connection(
+      synth: new pipelines.ShellStep('Synth', {
+        input: pipelines.CodePipelineSource.connection(
           `${config.github.owner}/${config.github.cdk.repo}`,
           config.github.cdk.branch,
           {
@@ -56,7 +46,7 @@ export class Pipeline extends Construct {
     devWave.addStage(dev);
 
     const prdWave = cdkPipeline.addWave('prd', {
-      pre: [new ManualApprovalStep('Approve')],
+      pre: [new pipelines.ManualApprovalStep('Approve')],
     });
     const prd = new AppStage(this, 'prd', {
       shortEnv: 'prd',

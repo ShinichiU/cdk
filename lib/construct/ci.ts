@@ -32,6 +32,7 @@ export class CdkCi extends Construct {
     });
     logGroup.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
+    const nCommand = 'n exec "$NODE_VERSION"';
     new Project(this, 'cdkCIProject', {
       source,
       badge: true,
@@ -42,17 +43,14 @@ export class CdkCi extends Construct {
             commands: [
               'echo n version is $(n -V)',
               'n "$NODE_VERSION"',
-              'n exec "$NODE_VERSION" npm ci',
+              `${nCommand} npm ci`,
             ],
           },
           build: {
             commands: [
-              'echo "== Doing prettier check"',
-              'n exec "$NODE_VERSION" npx prettier --check "./{bin,lib,src,test}/**/*.{ts,tsx}"',
-              'echo "== Doing eslint check"',
-              'n exec "$NODE_VERSION" npx eslint "./{bin,lib,src,test}/**/*.{ts,tsx}" --max-warnings=0',
-              'echo "== Doing test"',
-              'n exec "$NODE_VERSION" npm run test',
+              `${nCommand} npm run format-check`,
+              `${nCommand} npm run lint-check`,
+              `${nCommand} npm run test`,
             ],
           },
         },

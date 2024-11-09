@@ -9,8 +9,10 @@
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
+    "format-check": "prettier --check './{bin,lib,src,test}/**/*.{ts,tsx}'",
     "format": "prettier --write './{bin,lib,src,test}/**/*.{ts,tsx}'",
-    "lint": "eslint './{bin,lib,src,test}/**/*.{ts,tsx}' --max-warnings=0"
+    "lint-check": "eslint './{bin,lib,src,test}/**/*.{ts,tsx}' --max-warnings=0",
+    "lint": "eslint --fix './{bin,lib,src,test}/**/*.{ts,tsx}' --max-warnings=0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

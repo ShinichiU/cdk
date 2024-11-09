@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Pipeline } from '../construct/pipeline';
+import { CdkCi } from '../construct/ci';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkStack extends cdk.Stack {
@@ -8,5 +9,6 @@ export class CdkStack extends cdk.Stack {
     super(scope, id, props);
 
     new Pipeline(this, 'CdkPipeline');
+    new CdkCi(this, 'CdkCi');
   }
 }

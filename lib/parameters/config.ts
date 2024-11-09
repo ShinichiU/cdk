@@ -19,8 +19,7 @@ export interface IRootConfig {
     cdk: IGithubRepo;
   };
   aws: {
-    prd: IAccount;
-    dev: IAccount;
+    [key in ShortEnvironments]: IAccount;
   };
 }
 

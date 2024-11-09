@@ -2,6 +2,8 @@ import * as cdk from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { CdkStack } from '../lib/stack/cdk-stack';
 import { AppStack } from '../lib/stack/app-stack';
+import { ShortEnvironments } from '../lib/type/env';
+import { Config } from '../lib/parameters/root';
 
 test(`Matches the snapshot rootStack`, () => {
   const app = new cdk.App();
@@ -17,32 +19,19 @@ test(`Matches the snapshot rootStack`, () => {
   ).toMatchSnapshot();
 });
 
-test(`Matches the snapshot appStack prd`, () => {
-  const app = new cdk.App();
-  expect(
-    Template.fromStack(
-      new AppStack(app, 'AppStack', {
-        env: {
-          account: '992382384155',
-          region: 'us-east-1',
-        },
-        shortEnv: 'prd',
-      }),
-    ).toJSON(),
-  ).toMatchSnapshot();
-});
-
-test(`Matches the snapshot appStack dev`, () => {
-  const app = new cdk.App();
-  expect(
-    Template.fromStack(
-      new AppStack(app, 'AppStack', {
-        env: {
-          account: '533570606590',
-          region: 'us-east-1',
-        },
-        shortEnv: 'dev',
-      }),
-    ).toJSON(),
-  ).toMatchSnapshot();
+(['prd', 'dev'] as ShortEnvironments[]).forEach((shortEnv) => {
+  test(`Matches the snapshot appStack ${shortEnv}`, () => {
+    const app = new cdk.App();
+    expect(
+      Template.fromStack(
+        new AppStack(app, 'AppStack', {
+          env: {
+            account: Config.aws[shortEnv].accountId,
+            region: 'us-east-1',
+          },
+          shortEnv,
+        }),
+      ).toJSON(),
+    ).toMatchSnapshot();
+  });
 });

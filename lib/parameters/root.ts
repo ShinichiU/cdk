@@ -15,5 +15,8 @@ export const Config: IRootConfig = {
     dev: {
       accountId: '533570606590',
     },
+    local: {
+      accountId: '533570606590',
+    },
   },
 };

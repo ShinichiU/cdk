@@ -1405,11 +1405,8 @@ exports[`Matches the snapshot rootStack 1`] = `
     },
     "build": {
       "commands": [
-        "echo \\"== Doing prettier check\\"",
-        "n exec \\"$NODE_VERSION\\" npx prettier --check \\"./{bin,lib,src,test}/**/*.{ts,tsx}\\"",
-        "echo \\"== Doing eslint check\\"",
-        "n exec \\"$NODE_VERSION\\" npx eslint \\"./{bin,lib,src,test}/**/*.{ts,tsx}\\" --max-warnings=0",
-        "echo \\"== Doing test\\"",
+        "n exec \\"$NODE_VERSION\\" npm run format-check",
+        "n exec \\"$NODE_VERSION\\" npm run lint-check",
         "n exec \\"$NODE_VERSION\\" npm run test"
       ]
     }

@@ -6,6 +6,23 @@ import { Config as LocalConfig } from './local';
 export interface IConfig {
   domain: string;
 }
+interface IAccount {
+  accountId: string;
+}
+interface IGithubRepo {
+  repo: string;
+  branch: string;
+}
+export interface IRootConfig {
+  github: {
+    owner: string;
+    cdk: IGithubRepo;
+  };
+  aws: {
+    prd: IAccount;
+    dev: IAccount;
+  };
+}
 
 export const getConfig = (shortEnv: ShortEnvironments): IConfig => {
   if (shortEnv === 'prd') {

@@ -8,13 +8,13 @@ import {
 } from 'aws-cdk-lib/pipelines';
 import { CfnConnection } from 'aws-cdk-lib/aws-codeconnections';
 import { AppStage } from './pipeline/stage';
+import { Config } from '../parameters/root';
 
 export class Pipeline extends Construct {
-  readonly prdAccountId: string = '992382384155';
-  readonly devAccountId: string = '533570606590';
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
+    const config = Config;
     const codePipeline = new codepipeline.Pipeline(
       this,
       'cdk-pipeline-pipeline',
@@ -34,10 +34,14 @@ export class Pipeline extends Construct {
       codePipeline: codePipeline,
       selfMutation: true,
       synth: new ShellStep('Synth', {
-        input: CodePipelineSource.connection('ShinichiU/cdk', 'main', {
-          connectionArn: connection.attrConnectionArn,
-          triggerOnPush: true,
-        }),
+        input: CodePipelineSource.connection(
+          `${config.github.owner}/${config.github.cdk.repo}`,
+          config.github.cdk.branch,
+          {
+            connectionArn: connection.attrConnectionArn,
+            triggerOnPush: true,
+          },
+        ),
         commands: ['npm ci', 'npm run build', 'npm run cdk synth'],
       }),
     });
@@ -45,7 +49,7 @@ export class Pipeline extends Construct {
     const dev = new AppStage(this, 'dev', {
       shortEnv: 'dev',
       env: {
-        account: this.devAccountId,
+        account: config.aws.dev.accountId,
         region: process.env.CDK_DEFAULT_REGION,
       },
     });
@@ -57,7 +61,7 @@ export class Pipeline extends Construct {
     const prd = new AppStage(this, 'prd', {
       shortEnv: 'prd',
       env: {
-        account: this.prdAccountId,
+        account: config.aws.prd.accountId,
         region: process.env.CDK_DEFAULT_REGION,
       },
     });

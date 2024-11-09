@@ -7,9 +7,7 @@ import {
   ShellStep,
 } from 'aws-cdk-lib/pipelines';
 import { CfnConnection } from 'aws-cdk-lib/aws-codeconnections';
-import { Stage, StageProps } from 'aws-cdk-lib';
-import { ShortEnvironments } from '../type/env';
-import { AppStack } from '../stack/app-stack';
+import { AppStage } from './pipeline/stage';
 
 export class Pipeline extends Construct {
   readonly prdAccountId: string = '992382384155';
@@ -64,19 +62,5 @@ export class Pipeline extends Construct {
       },
     });
     prdWave.addStage(prd);
-  }
-}
-
-interface IStageProps extends StageProps {
-  shortEnv: ShortEnvironments;
-}
-
-class AppStage extends Stage {
-  constructor(scope: Construct, id: string, props: IStageProps) {
-    super(scope, id, props);
-
-    new AppStack(this, 'AppStack', {
-      shortEnv: props.shortEnv,
-    });
   }
 }

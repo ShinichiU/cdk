@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import { ShortEnvironments } from '../type/env';
 import { Dns } from '../construct/dns';
 import { WebApplication } from '../construct/web-application';
+import { ApplicationDiscoveryUser } from '../construct/application-discovery-user';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 interface Props extends cdk.StackProps {
@@ -22,5 +23,8 @@ export class AppStack extends cdk.Stack {
     route53.addAliasRecord(
       new cdk.aws_route53_targets.CloudFrontTarget(cloudfront.distribution),
     );
+    if (props.shortEnv === 'prd') {
+      new ApplicationDiscoveryUser(this, 'ApplicationDiscoveryUser');
+    }
   }
 }

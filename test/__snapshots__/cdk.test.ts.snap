@@ -650,6 +650,26 @@ exports[`Matches the snapshot appStack prd 1`] = `
     },
   },
   "Resources": {
+    "ApplicationDiscoveryUser753E4F43": {
+      "Properties": {
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AWSApplicationDiscoveryAgentAccess",
+              ],
+            ],
+          },
+        ],
+        "UserName": "ApplicationDiscoveryUser",
+      },
+      "Type": "AWS::IAM::User",
+    },
     "CloudFrontprddistribution0A453D49": {
       "Properties": {
         "DistributionConfig": {

@@ -1,10 +1,10 @@
 import { Construct } from 'constructs';
 import { CfnConnection } from 'aws-cdk-lib/aws-codeconnections';
 import { aws_codepipeline as pipeline, pipelines } from 'aws-cdk-lib';
-import { AppStage } from './pipeline/stage';
-import { Config } from '../parameters/root';
+import { AppStage } from './pipeline-stage';
+import { Config } from '../../parameters/root';
 
-export class Pipeline extends Construct {
+export class CdkPipeline extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 

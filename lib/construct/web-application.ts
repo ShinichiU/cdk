@@ -1,8 +1,8 @@
 import { Construct } from 'constructs';
 import { ShortEnvironments } from '../type/env';
 import {
-  aws_cloudfront_origins,
-  aws_s3,
+  aws_cloudfront_origins as origins,
+  aws_s3 as s3,
   CfnOutput,
   Duration,
   RemovalPolicy,
@@ -15,17 +15,17 @@ interface Props {
   shortEnv: ShortEnvironments;
   certificate: ICertificate;
 }
-export class CloudFront extends Construct {
-  private readonly webBucket: aws_s3.Bucket;
+export class WebApplication extends Construct {
+  private readonly webBucket: s3.Bucket;
   public readonly distribution: cloudfront.Distribution;
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
-    this.webBucket = new aws_s3.Bucket(this, `${props.shortEnv}-web-bucket`, {
+    this.webBucket = new s3.Bucket(this, `${props.shortEnv}-web-bucket`, {
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
       publicReadAccess: false,
       versioned: true,
-      encryption: aws_s3.BucketEncryption.S3_MANAGED,
+      encryption: s3.BucketEncryption.S3_MANAGED,
       enforceSSL: true,
     });
 
@@ -91,7 +91,7 @@ export class CloudFront extends Construct {
       {
         defaultRootObject: 'index.html',
         defaultBehavior: {
-          origin: aws_cloudfront_origins.S3BucketOrigin.withOriginAccessControl(
+          origin: origins.S3BucketOrigin.withOriginAccessControl(
             this.webBucket,
           ),
           viewerProtocolPolicy:

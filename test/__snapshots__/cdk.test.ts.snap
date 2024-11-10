@@ -3244,6 +3244,204 @@ exports[`Matches the snapshot rootStack 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
+    "CostAlertNotifyAnomalyMonitorAAD52D8A": {
+      "Properties": {
+        "MonitorName": "CostAnomalyMonitor",
+        "MonitorSpecification": "{"Dimensions":{"key":"LINKED_ACCOUNT","values":["700359865376","992382384155","533570606590"]}}",
+        "MonitorType": "CUSTOM",
+      },
+      "Type": "AWS::CE::AnomalyMonitor",
+    },
+    "CostAlertNotifyBillingAlarmTopic702DD13C": {
+      "Type": "AWS::SNS::Topic",
+    },
+    "CostAlertNotifyBillingAlarmTopicPolicyF67F2F10": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "chatbot.amazonaws.com",
+              },
+              "Resource": {
+                "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+              },
+              "Sid": "0",
+            },
+            {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "costalerts.amazonaws.com",
+              },
+              "Resource": {
+                "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+              },
+              "Sid": "1",
+            },
+            {
+              "Action": "sns:Publish",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "budgets.amazonaws.com",
+              },
+              "Resource": {
+                "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+              },
+              "Sid": "2",
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Topics": [
+          {
+            "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+          },
+        ],
+      },
+      "Type": "AWS::SNS::TopicPolicy",
+    },
+    "CostAlertNotifyCostAnomalySubscriptionDaily631C72F3": {
+      "Properties": {
+        "Frequency": "DAILY",
+        "MonitorArnList": [
+          {
+            "Fn::GetAtt": [
+              "CostAlertNotifyAnomalyMonitorAAD52D8A",
+              "MonitorArn",
+            ],
+          },
+        ],
+        "Subscribers": [
+          {
+            "Address": {
+              "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+            },
+            "Type": "SNS",
+          },
+        ],
+        "SubscriptionName": "AlertSubscription-Daily",
+        "ThresholdExpression": "{"And":[{"Dimensions":{"Key":"ANOMALY_TOTAL_IMPACT_PERCENTAGE","MatchOptions":["GREATER_THAN_OR_EQUAL"],"Values":["2"]}},{"Dimensions":{"Key":"ANOMALY_TOTAL_IMPACT_ABSOLUTE","MatchOptions":["GREATER_THAN_OR_EQUAL"],"Values":["3"]}}]}",
+      },
+      "Type": "AWS::CE::AnomalySubscription",
+    },
+    "CostAlertNotifyCostAnomalySubscriptionImmediate2F54B055": {
+      "Properties": {
+        "Frequency": "IMMEDIATE",
+        "MonitorArnList": [
+          {
+            "Fn::GetAtt": [
+              "CostAlertNotifyAnomalyMonitorAAD52D8A",
+              "MonitorArn",
+            ],
+          },
+        ],
+        "Subscribers": [
+          {
+            "Address": {
+              "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+            },
+            "Type": "SNS",
+          },
+        ],
+        "SubscriptionName": "AlertSubscription-Immediate",
+        "ThresholdExpression": "{"Dimensions":{"Key":"ANOMALY_TOTAL_IMPACT_ABSOLUTE","MatchOptions":["GREATER_THAN_OR_EQUAL"],"Values":["5"]}}",
+      },
+      "Type": "AWS::CE::AnomalySubscription",
+    },
+    "CostAlertNotifyMonthlyBudget06E8C16B": {
+      "Properties": {
+        "Budget": {
+          "BudgetLimit": {
+            "Amount": 10,
+            "Unit": "USD",
+          },
+          "BudgetName": "MonthlyBudget",
+          "BudgetType": "COST",
+          "CostTypes": {
+            "IncludeDiscount": true,
+            "IncludeSupport": true,
+            "IncludeTax": true,
+            "UseBlended": false,
+          },
+          "TimeUnit": "MONTHLY",
+        },
+        "NotificationsWithSubscribers": [
+          {
+            "Notification": {
+              "ComparisonOperator": "GREATER_THAN",
+              "NotificationType": "ACTUAL",
+              "Threshold": 90,
+              "ThresholdType": "PERCENTAGE",
+            },
+            "Subscribers": [
+              {
+                "Address": {
+                  "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+                },
+                "SubscriptionType": "SNS",
+              },
+            ],
+          },
+          {
+            "Notification": {
+              "ComparisonOperator": "GREATER_THAN",
+              "NotificationType": "FORECASTED",
+              "Threshold": 100,
+              "ThresholdType": "PERCENTAGE",
+            },
+            "Subscribers": [
+              {
+                "Address": {
+                  "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+                },
+                "SubscriptionType": "SNS",
+              },
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::Budgets::Budget",
+    },
+    "CostAlertNotifySlackChannel39CAD08B": {
+      "Properties": {
+        "ConfigurationName": "CostAlertsChannel",
+        "IamRoleArn": {
+          "Fn::GetAtt": [
+            "CostAlertNotifySlackChannelConfigurationRoleCF3D8F85",
+            "Arn",
+          ],
+        },
+        "LoggingLevel": "ERROR",
+        "SlackChannelId": "C0804LX0T1B",
+        "SlackWorkspaceId": "T3MDL6F5H",
+        "SnsTopicArns": [
+          {
+            "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
+          },
+        ],
+      },
+      "Type": "AWS::Chatbot::SlackChannelConfiguration",
+    },
+    "CostAlertNotifySlackChannelConfigurationRoleCF3D8F85": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "chatbot.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::IAM::Role",
+    },
     "GithubCredentialsgithubcredentialsDDFAB419": {
       "Properties": {
         "AuthType": "PERSONAL_ACCESS_TOKEN",

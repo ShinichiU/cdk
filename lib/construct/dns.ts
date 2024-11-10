@@ -21,7 +21,7 @@ interface Props {
   shortEnv: ShortEnvironments;
 }
 
-export class Route53 extends Construct {
+export class Dns extends Construct {
   private readonly hostedZone: route53.IHostedZone;
   public readonly certificate: ICertificate;
   constructor(scope: Construct, id: string, props: Props) {

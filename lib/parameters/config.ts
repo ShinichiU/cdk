@@ -21,6 +21,15 @@ export interface IRootConfig {
   aws: {
     [key in ShortEnvironments]: IAccount;
   };
+  slack: {
+    workspaceId: string;
+    costAlert: {
+      channelId: string;
+    };
+  };
+  alert: {
+    costAmount: number;
+  };
 }
 
 export const getConfig = (shortEnv: ShortEnvironments): IConfig => {

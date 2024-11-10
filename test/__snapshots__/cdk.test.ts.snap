@@ -3247,7 +3247,7 @@ exports[`Matches the snapshot rootStack 1`] = `
     "CostAlertNotifyAnomalyMonitorAAD52D8A": {
       "Properties": {
         "MonitorName": "CostAnomalyMonitor",
-        "MonitorSpecification": "{"Dimensions":{"key":"LINKED_ACCOUNT","values":["700359865376","992382384155","533570606590"]}}",
+        "MonitorSpecification": "{"Dimensions":{"Key":"LINKED_ACCOUNT","Values":["700359865376","992382384155","533570606590"]}}",
         "MonitorType": "CUSTOM",
       },
       "Type": "AWS::CE::AnomalyMonitor",

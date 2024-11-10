@@ -15,5 +15,9 @@
     "sendgrid",
     "Shinichi",
     "urabe"
-  ]
+  ],
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
 }

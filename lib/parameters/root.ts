@@ -25,6 +25,11 @@ export const Config: IRootConfig = {
       channelId: 'C0804LX0T1B',
     },
   },
+  email: {
+    costAlert: {
+      to: 'urabe+aws-cost-alert@nuts-choco.com',
+    },
+  },
   alert: {
     costAmount: 10,
   },

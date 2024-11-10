@@ -3316,10 +3316,8 @@ exports[`Matches the snapshot rootStack 1`] = `
         ],
         "Subscribers": [
           {
-            "Address": {
-              "Ref": "CostAlertNotifyBillingAlarmTopic702DD13C",
-            },
-            "Type": "SNS",
+            "Address": "urabe+aws-cost-alert@nuts-choco.com",
+            "Type": "EMAIL",
           },
         ],
         "SubscriptionName": "AlertSubscription-Daily",

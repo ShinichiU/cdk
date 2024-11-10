@@ -120,7 +120,12 @@ export class CostAlertNotify extends Construct {
     new ce.CfnAnomalySubscription(this, 'CostAnomalySubscriptionDaily', {
       frequency: 'DAILY',
       monitorArnList: [anomalyMonitor.attrMonitorArn],
-      subscribers,
+      subscribers: [
+        {
+          address: Config.email.costAlert.to,
+          type: 'EMAIL',
+        },
+      ],
       subscriptionName: 'AlertSubscription-Daily',
       thresholdExpression: JSON.stringify({
         And: [

@@ -27,6 +27,11 @@ export interface IRootConfig {
       channelId: string;
     };
   };
+  email: {
+    costAlert: {
+      to: string;
+    };
+  };
   alert: {
     costAmount: number;
   };

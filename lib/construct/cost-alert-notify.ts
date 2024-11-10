@@ -80,8 +80,8 @@ export class CostAlertNotify extends Construct {
       monitorType: 'CUSTOM',
       monitorSpecification: JSON.stringify({
         Dimensions: {
-          key: 'LINKED_ACCOUNT',
-          values: [
+          Key: 'LINKED_ACCOUNT',
+          Values: [
             Stack.of(this).account,
             Config.aws.prd.accountId,
             Config.aws.dev.accountId,

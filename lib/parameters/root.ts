@@ -19,4 +19,13 @@ export const Config: IRootConfig = {
       accountId: '533570606590',
     },
   },
+  slack: {
+    workspaceId: 'T3MDL6F5H',
+    costAlert: {
+      channelId: 'C0804LX0T1B',
+    },
+  },
+  alert: {
+    costAmount: 10,
+  },
 };

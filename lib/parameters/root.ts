@@ -8,6 +8,11 @@ export const Config: IRootConfig = {
       branch: 'main',
     },
   },
+  meta: {
+    node: {
+      version: '22',
+    },
+  },
   aws: {
     prd: {
       accountId: '992382384155',

@@ -21,6 +21,11 @@ export interface IRootConfig {
   aws: {
     [key in ShortEnvironments]: IAccount;
   };
+  meta: {
+    node: {
+      version: string;
+    };
+  };
   slack: {
     workspaceId: string;
     costAlert: {

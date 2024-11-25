@@ -8,7 +8,6 @@ export class CdkPipeline extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    const config = Config;
     const codePipeline = new pipeline.Pipeline(this, 'cdk-pipeline-pipeline', {
       crossAccountKeys: true,
       pipelineType: pipeline.PipelineType.V2,
@@ -25,8 +24,8 @@ export class CdkPipeline extends Construct {
       selfMutation: true,
       synth: new pipelines.ShellStep('Synth', {
         input: pipelines.CodePipelineSource.connection(
-          `${config.github.owner}/${config.github.cdk.repo}`,
-          config.github.cdk.branch,
+          `${Config.github.owner}/${Config.github.cdk.repo}`,
+          Config.github.cdk.branch,
           {
             connectionArn: connection.attrConnectionArn,
             triggerOnPush: true,
@@ -39,7 +38,7 @@ export class CdkPipeline extends Construct {
     const dev = new AppStage(this, 'dev', {
       shortEnv: 'dev',
       env: {
-        account: config.aws.dev.accountId,
+        account: Config.aws.dev.accountId,
         region: process.env.CDK_DEFAULT_REGION,
       },
     });
@@ -51,7 +50,7 @@ export class CdkPipeline extends Construct {
     const prd = new AppStage(this, 'prd', {
       shortEnv: 'prd',
       env: {
-        account: config.aws.prd.accountId,
+        account: Config.aws.prd.accountId,
         region: process.env.CDK_DEFAULT_REGION,
       },
     });

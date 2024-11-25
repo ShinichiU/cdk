@@ -1,5 +1,5 @@
 import { Construct } from 'constructs';
-import { Config } from '../parameters/root';
+import { Config } from '../../parameters/root';
 import {
   Duration,
   RemovalPolicy,
@@ -10,10 +10,9 @@ import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 export class CdkCi extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
-    const config = Config;
     const source = codebuild.Source.gitHub({
-      owner: config.github.owner,
-      repo: config.github.cdk.repo,
+      owner: Config.github.owner,
+      repo: Config.github.cdk.repo,
       webhookFilters: [
         codebuild.FilterGroup.inEventOf(
           codebuild.EventAction.PULL_REQUEST_CREATED,
@@ -25,7 +24,7 @@ export class CdkCi extends Construct {
           codebuild.EventAction.PULL_REQUEST_REOPENED,
         ),
         codebuild.FilterGroup.inEventOf(codebuild.EventAction.PUSH).andBranchIs(
-          config.github.cdk.branch,
+          Config.github.cdk.branch,
         ),
       ],
     });
@@ -35,7 +34,6 @@ export class CdkCi extends Construct {
     });
     logGroup.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-    const nCommand = 'n exec "$NODE_VERSION"';
     new codebuild.Project(this, 'cdkCIProject', {
       source,
       badge: true,
@@ -46,14 +44,15 @@ export class CdkCi extends Construct {
             commands: [
               'echo n version is $(n -V)',
               'n "$NODE_VERSION"',
-              `${nCommand} npm ci`,
+              'npm ci',
             ],
           },
           build: {
             commands: [
-              `${nCommand} npm run format-check`,
-              `${nCommand} npm run lint-check`,
-              `${nCommand} npm run test`,
+              'node -v',
+              'npm run format-check',
+              'npm run lint-check',
+              'npm run test',
             ],
           },
         },
@@ -63,7 +62,7 @@ export class CdkCi extends Construct {
           value: 'Asia/Tokyo',
         },
         NODE_VERSION: {
-          value: '22',
+          value: Config.meta.node.version,
         },
       },
       timeout: Duration.minutes(30),

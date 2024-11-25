@@ -1420,14 +1420,15 @@ exports[`Matches the snapshot rootStack 1`] = `
       "commands": [
         "echo n version is $(n -V)",
         "n \\"$NODE_VERSION\\"",
-        "n exec \\"$NODE_VERSION\\" npm ci"
+        "npm ci"
       ]
     },
     "build": {
       "commands": [
-        "n exec \\"$NODE_VERSION\\" npm run format-check",
-        "n exec \\"$NODE_VERSION\\" npm run lint-check",
-        "n exec \\"$NODE_VERSION\\" npm run test"
+        "node -v",
+        "npm run format-check",
+        "npm run lint-check",
+        "npm run test"
       ]
     }
   }

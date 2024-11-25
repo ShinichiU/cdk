@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { CdkPipeline } from '../construct/cdk/pipeline';
-import { CdkCi } from '../construct/ci';
+import { CdkCi } from '../construct/cdk/ci';
 import { GithubCredentials } from '../construct/github';
 import { CostAlertNotify } from '../construct/cost-alert-notify';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';

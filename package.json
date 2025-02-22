@@ -28,7 +28,7 @@
   "dependencies": {
     "@aws-cdk/aws-lambda-python-alpha": "^2.171.1-alpha.0",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
-    "aws-cdk-lib": "2.171.1",
+    "aws-cdk-lib": "2.177.0",
     "constructs": "^10.4.2",
     "deploy-time-build": "^0.3.23",
     "esbuild": "^0.24.0",

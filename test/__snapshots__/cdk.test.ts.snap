@@ -1420,15 +1420,16 @@ exports[`Matches the snapshot rootStack 1`] = `
       "commands": [
         "echo n version is $(n -V)",
         "n \\"$NODE_VERSION\\"",
-        "npm ci"
+        "npm i -g pnpm",
+        "pnpm i --frozen-lockfile"
       ]
     },
     "build": {
       "commands": [
         "node -v",
-        "npm run format-check",
-        "npm run lint-check",
-        "npm run test"
+        "pnpm format-check",
+        "pnpm lint-check",
+        "pnpm test"
       ]
     }
   }
@@ -3118,15 +3119,9 @@ exports[`Matches the snapshot rootStack 1`] = `
               "Effect": "Allow",
               "Principal": {
                 "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::700359865376:root",
-                    ],
+                  "Fn::GetAtt": [
+                    "CdkPipelinecdkpipelinepipelineRole7C58051F",
+                    "Arn",
                   ],
                 },
               },
@@ -3246,15 +3241,9 @@ exports[`Matches the snapshot rootStack 1`] = `
               "Effect": "Allow",
               "Principal": {
                 "AWS": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition",
-                      },
-                      ":iam::700359865376:root",
-                    ],
+                  "Fn::GetAtt": [
+                    "CdkPipelinecdkpipelinepipelineRole7C58051F",
+                    "Arn",
                   ],
                 },
               },

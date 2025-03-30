@@ -11,9 +11,18 @@ importers:
       '@aws-cdk/aws-lambda-python-alpha':
         specifier: 2.186.0-alpha.0
         version: 2.186.0-alpha.0(aws-cdk-lib@2.186.0(constructs@10.4.2))(constructs@10.4.2)
+      '@eslint/eslintrc':
+        specifier: ^3.3.1
+        version: 3.3.1
+      '@eslint/js':
+        specifier: ^9.23.0
+        version: 9.23.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.28.0
         version: 8.28.0(@typescript-eslint/parser@8.28.0(eslint@9.23.0)(typescript@5.8.2))(eslint@9.23.0)(typescript@5.8.2)
+      '@typescript-eslint/parser':
+        specifier: ^8.28.0
+        version: 8.28.0(eslint@9.23.0)(typescript@5.8.2)
       aws-cdk-lib:
         specifier: 2.186.0
         version: 2.186.0(constructs@10.4.2)

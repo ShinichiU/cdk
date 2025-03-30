@@ -44,15 +44,16 @@ export class CdkCi extends Construct {
             commands: [
               'echo n version is $(n -V)',
               'n "$NODE_VERSION"',
-              'npm ci',
+              'npm i -g pnpm',
+              'pnpm i --frozen-lockfile',
             ],
           },
           build: {
             commands: [
               'node -v',
-              'npm run format-check',
-              'npm run lint-check',
-              'npm run test',
+              'pnpm format-check',
+              'pnpm lint-check',
+              'pnpm test',
             ],
           },
         },

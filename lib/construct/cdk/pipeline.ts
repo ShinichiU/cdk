@@ -31,7 +31,12 @@ export class CdkPipeline extends Construct {
             triggerOnPush: true,
           },
         ),
-        commands: ['npm ci', 'npm run build', 'npm run cdk synth'],
+        commands: [
+          'npm i -g pnpm',
+          'pnpm i --frozen-lockfile',
+          'pnpm build',
+          'pnpm cdk synth',
+        ],
       }),
     });
     const devWave = cdkPipeline.addWave('dev');

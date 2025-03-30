@@ -2190,7 +2190,7 @@ exports[`Matches the snapshot rootStack 1`] = `
                   "Version": "1",
                 },
                 "Configuration": {
-                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"715348d97cc9117577184fc4a82152b539c99dc6c30336e09a236e17179d0cd2"}]",
+                  "EnvironmentVariables": "[{"name":"_PROJECT_CONFIG_HASH","type":"PLAINTEXT","value":"cbca252aa91fa35cc2c0895ee1e082367080a0f1f317cdd4bc0bc17898e5f8f3"}]",
                   "ProjectName": {
                     "Ref": "CdkPipelinecdkpipelinepipelineBuildSynthCdkBuildProject9D1F542C",
                   },
@@ -2772,9 +2772,10 @@ exports[`Matches the snapshot rootStack 1`] = `
   "phases": {
     "build": {
       "commands": [
-        "npm ci",
-        "npm run build",
-        "npm run cdk synth"
+        "npm i -g pnpm",
+        "pnpm i --frozen-lockfile",
+        "pnpm build",
+        "pnpm cdk synth"
       ]
     }
   },

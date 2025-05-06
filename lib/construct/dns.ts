@@ -157,10 +157,13 @@ export class Dns extends Construct {
         domainName: 's2.domainkey.u9232917.wl168.sendgrid.net',
       });
 
-      // Google Workspace, Sendgrid の TXT レコードを設定
-      new route53.TxtRecord(this, 'gws-sendgrid-records', {
+      // Google Workspace, Sendgrid, OpenAI の TXT レコードを設定
+      new route53.TxtRecord(this, 'MainTxtRecords', {
         zone: this.hostedZone,
-        values: ['v=spf1 include:_spf.google.com include:sendgrid.net ~all'],
+        values: [
+          'v=spf1 include:_spf.google.com include:sendgrid.net ~all',
+          'openai-domain-verification=dv-bFhokA6AjBOG1WIRMvCJKJ9m',
+        ],
       });
       // _dmarc record を設定
       new route53.TxtRecord(this, 'dmarc-records', {

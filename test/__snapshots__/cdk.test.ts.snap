@@ -993,6 +993,21 @@ exports[`Matches the snapshot appStack prd 1`] = `
       },
       "Type": "AWS::IAM::Role",
     },
+    "Route53MainTxtRecords2776270F": {
+      "Properties": {
+        "HostedZoneId": {
+          "Ref": "Route53hostedzone82773177",
+        },
+        "Name": "nuts-choco.com.",
+        "ResourceRecords": [
+          ""v=spf1 include:_spf.google.com include:sendgrid.net ~all"",
+          ""openai-domain-verification=dv-bFhokA6AjBOG1WIRMvCJKJ9m"",
+        ],
+        "TTL": "1800",
+        "Type": "TXT",
+      },
+      "Type": "AWS::Route53::RecordSet",
+    },
     "Route53aliasrecorde3b0c442982EFDB858": {
       "Properties": {
         "AliasTarget": {
@@ -1229,20 +1244,6 @@ exports[`Matches the snapshot appStack prd 1`] = `
         ],
         "TTL": "1800",
         "Type": "MX",
-      },
-      "Type": "AWS::Route53::RecordSet",
-    },
-    "Route53gwssendgridrecords0A07C360": {
-      "Properties": {
-        "HostedZoneId": {
-          "Ref": "Route53hostedzone82773177",
-        },
-        "Name": "nuts-choco.com.",
-        "ResourceRecords": [
-          ""v=spf1 include:_spf.google.com include:sendgrid.net ~all"",
-        ],
-        "TTL": "1800",
-        "Type": "TXT",
       },
       "Type": "AWS::Route53::RecordSet",
     },

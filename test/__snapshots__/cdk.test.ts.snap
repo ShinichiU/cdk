@@ -1002,6 +1002,7 @@ exports[`Matches the snapshot appStack prd 1`] = `
         "ResourceRecords": [
           ""v=spf1 include:_spf.google.com include:sendgrid.net ~all"",
           ""openai-domain-verification=dv-bFhokA6AjBOG1WIRMvCJKJ9m"",
+          ""google-site-verification=BPn7ZTbxMRG1iZgjBCdAzKytMXKYUwVu6QF0lKuj5ns"",
         ],
         "TTL": "1800",
         "Type": "TXT",

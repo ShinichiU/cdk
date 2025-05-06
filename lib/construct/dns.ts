@@ -163,6 +163,7 @@ export class Dns extends Construct {
         values: [
           'v=spf1 include:_spf.google.com include:sendgrid.net ~all',
           'openai-domain-verification=dv-bFhokA6AjBOG1WIRMvCJKJ9m',
+          'google-site-verification=BPn7ZTbxMRG1iZgjBCdAzKytMXKYUwVu6QF0lKuj5ns',
         ],
       });
       // _dmarc record を設定

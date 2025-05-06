@@ -1614,7 +1614,7 @@ exports[`Matches the snapshot rootStack 1`] = `
         "Cache": {
           "Type": "NO_CACHE",
         },
-        "Description": "Pipeline step RootStack/cdk-pipeline-pipeline/Assets/FileAsset1",
+        "Description": "Pipeline step RootStack/cdk-pipeline-pipeline/Assets/RootStack_CdkPipeline_dev_AppStack_Custom_S3AutoDeleteObjectsCustomResourceProvider_Code",
         "EncryptionKey": {
           "Fn::GetAtt": [
             "CdkPipelinecdkpipelinepipelineArtifactsBucketEncryptionKey2C26E8FF",
@@ -2268,7 +2268,7 @@ exports[`Matches the snapshot rootStack 1`] = `
                     "Name": "Synth_Output",
                   },
                 ],
-                "Name": "FileAsset1",
+                "Name": "RootStack_CdkPipeline_dev_AppStack_Custom_S3AutoDeleteObjectsCustomResourceProvider_Code",
                 "RoleArn": {
                   "Fn::GetAtt": [
                     "CdkPipelinecdkpipelineCodeBuildActionRole19AB58C7",
